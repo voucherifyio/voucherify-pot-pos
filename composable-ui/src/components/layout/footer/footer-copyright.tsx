@@ -20,7 +20,7 @@ export const CopyrightFooter = ({ copyrightText }: CopyrightFooterProps) => {
         </Text>
       </Box>
 
-      <ButtonGroup variant="ghost">
+      {/* <ButtonGroup variant="ghost">
         <IconButton
           as="a"
           href="#"
@@ -39,7 +39,7 @@ export const CopyrightFooter = ({ copyrightText }: CopyrightFooterProps) => {
           aria-label="YouTube"
           icon={<FaYoutube fontSize="1.25rem" />}
         />
-      </ButtonGroup>
+      </ButtonGroup> */}
     </Stack>
   )
 }

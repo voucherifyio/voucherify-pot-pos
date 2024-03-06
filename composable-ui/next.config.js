@@ -39,7 +39,7 @@ module.exports = () => {
       '@composable/ui',
     ],
     images: {
-      domains: ['loremflickr.com'],
+      domains: ['loremflickr.com', 'voucherify-uploads.s3.amazonaws.com'],
       formats: ['image/avif', 'image/webp'],
       minimumCacheTTL: 60 * 60 * 24 * 30,
     },

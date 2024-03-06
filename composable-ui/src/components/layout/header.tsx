@@ -16,6 +16,7 @@ import { HamburgerIcon } from '@chakra-ui/icons'
 import { useRouter } from 'next/router'
 import { MenuItem } from 'components/menu/menu-item'
 import NextLink from 'next/link'
+import { Heading } from '@chakra-ui/react'
 
 export const Header = () => {
   const { cart } = useCart()
@@ -26,7 +27,7 @@ export const Header = () => {
 
   return (
     <Box as="header" borderBottomWidth="1px" height={'4rem'}>
-      <Container maxW="container.xl">
+      <Container maxW="container.2xl">
         <Grid
           templateColumns={'repeat(3, 1fr)'}
           justifyContent={'center'}
@@ -54,10 +55,13 @@ export const Header = () => {
             justifyContent={{ base: 'center', md: 'left' }}
           >
             <Link as={NextLink} href="/">
-              <Logo h="21px" />
+              {/* <Logo h="21px" /> */}
+              <Heading as="p" size="sm">
+                POS
+              </Heading>
             </Link>
           </Flex>
-          <Box
+          {/* <Box
             as="nav"
             display={{ base: 'none', md: 'flex' }}
             justifyContent="center"
@@ -75,8 +79,8 @@ export const Header = () => {
                 />
               )
             })}
-          </Box>
-          <Box
+          </Box> */}
+          {/* <Box
             display="flex"
             alignItems={'center'}
             justifyContent="flex-end"
@@ -97,7 +101,7 @@ export const Header = () => {
             >
               <CartIcon cartQuantity={cart.quantity} />
             </Button>
-          </Box>
+          </Box> */}
         </Grid>
       </Container>
     </Box>

@@ -2,16 +2,16 @@ export const LOCAL_STORAGE_CART_ID = 'cart_id'
 export const LOCAL_STORAGE_CART_UPDATED_AT = 'cart_updated_at'
 
 export const APP_CONFIG = {
-  NAME: 'Composable UI',
-  TITLE_TEMPLATE: '%s | Composable UI',
+  NAME: 'Voucherify POS - PoT',
+  TITLE_TEMPLATE: '%s | POS',
   FAVICON: '/img/favicon.ico',
   CURRENCY_CODE: 'USD',
   IMAGE_PLACEHOLDER: '/img/image-placeholder.svg',
-  COPYRIGHT: `© Copyright Composable UI ${new Date().getFullYear()}`,
+  COPYRIGHT: `© Copyright Voucherify ${new Date().getFullYear()}`,
   TAG_LINE: 'Learn. Experiment. Build.',
   FOOTER_MESSAGE: 'Learn more at',
-  URL: 'https://composable.com',
-  URL_TEXT: 'Composable.com',
+  URL: 'https://voucherify.io',
+  URL_TEXT: 'Voucherify.io',
 } as const
 
 export const ALGOLIA_APP_ID = process.env.NEXT_PUBLIC_ALGOLIA_APP_ID ?? ''

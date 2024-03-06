@@ -1,6 +1,6 @@
 import { GetStaticProps } from 'next'
 import { createServerApp } from 'server/isr/server-app'
-import { HomePage } from 'components/home-page'
+import { PosPage } from 'components/pos-page'
 
 export const getStaticProps: GetStaticProps = async (context) => {
   // In this particular implementation, the application is using "Static Site Generation" (SSG)
@@ -24,4 +24,4 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
 }
 
-export default HomePage
+export default PosPage

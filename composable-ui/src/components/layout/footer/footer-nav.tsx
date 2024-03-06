@@ -52,8 +52,8 @@ export const Footer = ({
 }: FooterProps) => {
   return (
     <Box borderTopWidth="1px">
-      <Container as="footer" role="contentinfo" maxW="container.xl">
-        <Stack
+      <Container as="footer" role="contentinfo" maxW="container.2xl">
+        {/* <Stack
           justify="space-around"
           align="start"
           direction={{ base: 'column', md: 'row' }}
@@ -80,7 +80,7 @@ export const Footer = ({
               </SimpleGrid>
             </Fragment>
           ))}
-        </Stack>
+        </Stack> */}
         <Divider />
         <CopyrightFooter copyrightText={copyrightText} />
       </Container>

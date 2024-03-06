@@ -7,7 +7,12 @@ import {
   HorizontalProductCardReadOnlyProps,
 } from './horizontal-product-card-read-only'
 
+import { HorizontalProductCardEditablePosProps } from './horizontal-product-card-editable-pos'
+
+export { HorizontalProductCardEditablePos } from './horizontal-product-card-editable-pos'
+
 export type HorizontalProductCardProps = (
+  | HorizontalProductCardEditablePosProps
   | HorizontalProductCardEditableProps
   | HorizontalProductCardReadOnlyProps
 ) & {

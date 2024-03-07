@@ -94,7 +94,6 @@ export const getCustomer = async (phone: string) => {
       registrationDate: customer.metadata['registration_date'],
     }
   } catch (e) {
-    console.log(`Customer not found`, e)
     return false
   }
 }
@@ -122,7 +121,6 @@ export const upsertCustomer = async (phone: string) => {
       registrationDate: customer.metadata['registration_date'],
     }
   } catch (e) {
-    console.log(`Customer not found`, e)
     return false
   }
 }

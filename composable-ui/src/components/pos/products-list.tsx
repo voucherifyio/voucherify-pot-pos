@@ -14,29 +14,6 @@ export interface ProductsProps {
   onClick?: (productId: string) => unknown
 }
 
-// export const ProductsList = ({onClick}: ProductsProps) => {
-//   return (
-//     <SimpleGrid minChildWidth='120px' spacing={6}>
-//       {products.map(product => (
-//         <Box onClick={() => onClick?.(product.id)} key={product.id} bg='tomato' height='80px'>
-//           {product.images[0] && (
-//             <Image
-//               src={product.images[0]?.url}
-//               alt={product.images[0]?.alt}
-//               height={Number(180 / 3)}
-//               width={Number(145 / 3)}
-//               quality={90}
-//               style={{ objectFit: 'cover' }}
-
-//             />
-//           )}
-//           {product.name}
-//         </Box>
-//       ))}
-
-//     </SimpleGrid>
-//   )
-// }
 export const ProductsList = ({ onClick }: ProductsProps) => {
   return (
     <SimpleGrid minChildWidth="120px" spacing={2}>

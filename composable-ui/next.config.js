@@ -37,6 +37,7 @@ module.exports = () => {
       '@composable/stripe',
       '@composable/types',
       '@composable/ui',
+      '@composable/voucherify',
     ],
     images: {
       domains: ['loremflickr.com', 'voucherify-uploads.s3.amazonaws.com'],

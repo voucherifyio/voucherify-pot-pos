@@ -11,6 +11,9 @@ export const addCartItem = protectedProcedure
       quantity: z.number(),
     })
   )
-  .mutation(async ({ input }) => {
-    return await commerce.addCartItem({ ...input })
+  .mutation(async ({ input, ctx }) => {
+    const user = ctx.session.user.sourceId
+      ? { sourceId: ctx.session.user.sourceId }
+      : undefined
+    return await commerce.addCartItem({ ...input, user })
   })

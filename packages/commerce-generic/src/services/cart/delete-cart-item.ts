@@ -7,6 +7,7 @@ import { updateCartDiscount } from '@composable/voucherify'
 export const deleteCartItem: CommerceService['deleteCartItem'] = async ({
   cartId,
   productId,
+  user,
 }) => {
   const cart = await getCart(cartId)
 
@@ -18,8 +19,7 @@ export const deleteCartItem: CommerceService['deleteCartItem'] = async ({
 
   cart.items = cart.items.filter((item) => item.id !== productId)
   cart.summary = calculateCartSummary(cart.items)
-
-  const cartWithDiscount = await updateCartDiscount(cart)
+  const cartWithDiscount = await updateCartDiscount(cart, user)
 
   return saveCart(cartWithDiscount)
 }

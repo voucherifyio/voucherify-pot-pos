@@ -17,12 +17,16 @@ interface CartSummaryProps {
   rootProps?: StackProps
   renderCheckoutButton?: boolean
   cartData?: CartData
+  nextButtonLabel?: string
+  nextButtonAction?: () => unknown
 }
 
 export const CartSummary = ({
   rootProps,
   renderCheckoutButton = true,
   cartData,
+  nextButtonLabel,
+  nextButtonAction,
 }: CartSummaryProps) => {
   const router = useRouter()
   const { cart } = useCart()
@@ -131,14 +135,19 @@ export const CartSummary = ({
       {renderCheckoutButton && (
         <Button
           onClick={() => {
-            router.push('/checkout')
+            if (nextButtonAction) {
+              nextButtonAction()
+            } else {
+              router.push('/checkout')
+            }
           }}
           w={{ base: 'full' }}
           maxW={{ base: 'full' }}
           variant={'solid'}
           size={'lg'}
         >
-          {intl.formatMessage({ id: 'action.proceedToCheckout' })}
+          {nextButtonLabel ||
+            intl.formatMessage({ id: 'action.proceedToCheckout' })}
         </Button>
       )}
     </Stack>

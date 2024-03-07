@@ -32,6 +32,9 @@ export const createOrder = protectedProcedure
       }),
     })
   )
-  .mutation(async ({ input }) => {
-    return await commerce.createOrder({ ...input })
+  .mutation(async ({ input, ctx }) => {
+    const user = ctx.session.user.sourceId
+      ? { sourceId: ctx.session.user.sourceId }
+      : undefined
+    return await commerce.createOrder({ ...input, user })
   })

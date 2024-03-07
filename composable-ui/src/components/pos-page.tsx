@@ -2,47 +2,50 @@ import { FormatNumberOptions, useIntl } from 'react-intl'
 import { useRouter } from 'next/router'
 import { NextSeo } from 'next-seo'
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
+  Button,
   Container,
-  Divider,
   Flex,
   Grid,
   GridItem,
-  Stack,
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
+import { signOut } from 'next-auth/react'
 
 import { APP_CONFIG } from '../utils/constants'
-import { useCart, useToast } from 'hooks'
+import { useCart, usePosCheckout, useToast } from 'hooks'
 import { HorizontalProductCardEditablePos } from '@composable/ui'
-import {
-  CartEmptyState,
-  CartLoadingState,
-  CartSummary,
-  CartTotal,
-} from './cart'
+import { CartSummary } from './cart'
 import { ProductsList } from './pos/products-list'
 import { Customer } from './pos/customer'
+import { useState } from 'react'
 
 export const PosPage = () => {
   const router = useRouter()
   const intl = useIntl()
+  const [orderAdded, setOrderAdded] = useState(false)
+  const { placeOrder } = usePosCheckout()
   const toast = useToast()
-  const { cart, updateCartItem, deleteCartItem, addCartItem } = useCart({
-    onCartItemUpdateError: () => {
-      toast({
-        status: 'error',
-        description: intl.formatMessage({ id: 'app.failure' }),
-      })
-    },
-    onCartItemDeleteError: () => {
-      toast({
-        status: 'error',
-        description: intl.formatMessage({ id: 'app.failure' }),
-      })
-    },
-  })
+  const { cart, updateCartItem, deleteCartItem, addCartItem, deleteCart } =
+    useCart({
+      onCartItemUpdateError: () => {
+        toast({
+          status: 'error',
+          description: intl.formatMessage({ id: 'app.failure' }),
+        })
+      },
+      onCartItemDeleteError: () => {
+        toast({
+          status: 'error',
+          description: intl.formatMessage({ id: 'app.failure' }),
+        })
+      },
+    })
 
   const { isLoading, isEmpty, quantity } = cart
   const title = intl.formatMessage({ id: 'cart.title' })
@@ -64,6 +67,46 @@ export const PosPage = () => {
       productId: productId,
       quantity: 1,
     })
+  }
+
+  const paidByCash = async () => {
+    const a = await placeOrder()
+
+    setOrderAdded(true)
+
+    // todo display messgae?
+  }
+  const nextOrder = async () => {
+    await deleteCart()
+    console.log('aaa')
+    await signOut({ redirect: false })
+    console.log('aaa2')
+    setOrderAdded(false)
+  }
+
+  if (orderAdded) {
+    return (
+      <Container maxW="container.2xl" py={{ base: '4', md: '8' }}>
+        <Alert
+          status="success"
+          variant="subtle"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+          height="200px"
+        >
+          <AlertIcon boxSize="40px" mr={0} />
+          <AlertTitle mt={4} mb={1} fontSize="lg">
+            Order paid!
+          </AlertTitle>
+          <AlertDescription maxWidth="sm">
+            Customer Farewell Instruction Guide here.
+          </AlertDescription>
+          <Button onClick={nextOrder}>Next order</Button>
+        </Alert>
+      </Container>
+    )
   }
 
   return (
@@ -156,7 +199,10 @@ export const PosPage = () => {
                   )
                 })}
               </Box>
-              <CartSummary />
+              <CartSummary
+                nextButtonAction={paidByCash}
+                nextButtonLabel="Paid by cash"
+              />
             </>
           )}
         </GridItem>

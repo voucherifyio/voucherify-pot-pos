@@ -125,7 +125,7 @@ export const upsertCustomer = async (phone: string) => {
   }
 }
 
-export const orderPaid = async (order: Order) => {
+export const orderPaid = async (order: Order, user?: UserSession) => {
   const voucherifyOrder = orderToVoucherifyOrder(order)
 
   const vouchers = order.vouchers_applied?.map((voucher) => ({
@@ -136,10 +136,19 @@ export const orderPaid = async (order: Order) => {
     id: promotion.id,
     object: 'promotion_tier' as const,
   }))
-
-  return await voucherify.redemptions.redeemStackable({
-    redeemables: [...(vouchers || []), ...(promotions || [])],
-    order: voucherifyOrder,
-    options: { expand: ['order'] },
-  })
+  const customer = user?.sourceId ? { source_id: user.sourceId } : undefined
+  const redeemables = [...(vouchers || []), ...(promotions || [])]
+  if (redeemables.length) {
+    return await voucherify.redemptions.redeemStackable({
+      redeemables,
+      order: voucherifyOrder,
+      options: { expand: ['order'] },
+      customer,
+    })
+  } else {
+    return await voucherify.orders.create({
+      ...voucherifyOrder,
+      customer,
+    })
+  }
 }

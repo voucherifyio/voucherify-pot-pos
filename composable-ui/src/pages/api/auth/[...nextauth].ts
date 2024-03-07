@@ -3,7 +3,7 @@ import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getCRSFCookieInfo } from 'server/auth-utils'
-import { getCustomer, upsertCustomer } from '@composable/voucherify'
+import { getCustomer, getCustomerByLoyaltyCard } from '@composable/voucherify'
 import { Analytics } from '@segment/analytics-node'
 import dayjs from 'dayjs'
 
@@ -32,6 +32,39 @@ export const rawAuthOptions: NextAuthOptions = {
         }
         //anyone can do an anonymous login
         return anonymousUser
+      },
+    }),
+    CredentialsProvider({
+      id: 'only-loyalty-card',
+      name: 'Only loyalty card',
+      credentials: {
+        code: { label: 'Loyalty card code', type: 'text' },
+      },
+      async authorize(credentials, req) {
+        if (!credentials?.code) {
+          return null
+        }
+
+        const voucherifyCustomer = await getCustomerByLoyaltyCard(
+          credentials.code
+        )
+
+        if (!voucherifyCustomer) {
+          return null
+        }
+
+        const customer = {
+          id: voucherifyCustomer.id,
+          voucherifyId: voucherifyCustomer.id,
+          sourceId: voucherifyCustomer.source_id,
+          name: voucherifyCustomer.name,
+          email: voucherifyCustomer.email,
+          phoneNumber: voucherifyCustomer.phone,
+          registeredCustomer: voucherifyCustomer.registeredCustomer,
+          registrationDate: voucherifyCustomer.registrationDate,
+          image: '',
+        }
+        return customer
       },
     }),
 

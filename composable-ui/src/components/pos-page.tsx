@@ -9,6 +9,7 @@ import {
   Box,
   Button,
   Container,
+  Divider,
   Flex,
   Grid,
   GridItem,
@@ -24,6 +25,7 @@ import { CartSummary } from './cart'
 import { ProductsList } from './pos/products-list'
 import { Customer } from './pos/customer'
 import { useState } from 'react'
+import { LoyaltyCardsList } from './pos/loyalty-cards-list'
 
 export const PosPage = () => {
   const router = useRouter()
@@ -215,6 +217,15 @@ export const PosPage = () => {
             Scan product
           </Text>
           <ProductsList onClick={handleAddToCart} />
+
+          <Text
+            mt={12}
+            textStyle={{ base: 'Mobile/L', md: 'Desktop/L' }}
+            color={'shading.700'}
+          >
+            Scan loyalty card
+          </Text>
+          <LoyaltyCardsList />
         </GridItem>
       </Grid>
     </Container>

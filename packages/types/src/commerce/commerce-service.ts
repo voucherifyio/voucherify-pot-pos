@@ -8,6 +8,7 @@ import {
   UserSession,
   Product,
   SitemapField,
+  LoyaltyCard,
 } from './index'
 
 export interface CommerceService {
@@ -103,4 +104,6 @@ export interface CommerceService {
   }): Promise<User | null>
 
   resetPassword(params: { email: string }): Promise<void>
+
+  getLoyaltyCardsList(): Promise<LoyaltyCard[]>
 }

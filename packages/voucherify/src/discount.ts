@@ -98,6 +98,43 @@ export const getCustomer = async (phone: string) => {
     return false
   }
 }
+export const getCustomerByLoyaltyCard = async (code: string) => {
+  try {
+    const voucherify = getVoucherify()
+    const loyaltyMember = await voucherify.loyalties.getMember(null, code)
+    if (!loyaltyMember || !loyaltyMember.holder_id) {
+      return false
+    }
+    const customer = await voucherify.customers.get(loyaltyMember.holder_id)
+    if (customer.object !== 'customer') {
+      return false
+    }
+    return {
+      id: customer.id,
+      source_id: customer.source_id,
+      email: customer.email,
+      phone: customer.phone,
+      name: customer.name,
+      registeredCustomer: !!customer.metadata['registered_customer'] || false,
+      registrationDate: customer.metadata['registration_date'],
+    }
+  } catch (e) {
+    return false
+  }
+}
+
+export const getLoyaltyCardsList = async () => {
+  try {
+    const voucherify = getVoucherify()
+    const membersResponse = await voucherify.loyalties.listMembers(
+      'camp_d7nX6wuJJ60BbS0YaAAHa2zy',
+      { limit: 100 }
+    )
+    return membersResponse.vouchers
+  } catch (e) {
+    return []
+  }
+}
 
 export const upsertCustomer = async (phone: string) => {
   try {

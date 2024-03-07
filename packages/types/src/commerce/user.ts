@@ -13,3 +13,9 @@ export interface LoginCredentials {
   email: string
   password: string
 }
+
+export interface LoyaltyCard {
+  id: string
+  code: string
+  holderId: string
+}

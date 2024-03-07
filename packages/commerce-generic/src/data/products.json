@@ -1,9 +1,9 @@
 [
   {
-    "brand": "Nestle",
-    "category": "Food",
+    "brand": "Red Bull",
+    "category": "Convenience",
     "description": "",
-    "id": "4310122e-bbd1-42ed-9f8d-377f2a391006",
+    "id": "Red Bull",
     "images": [
       {
         "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_2ntweBdHSlc0ShbL9bsPfii2.jpeg",
@@ -12,7 +12,7 @@
     ],
     "materialAndCare": "",
     "name": "Red Bull",
-    "price": 10,
+    "price": 6,
     "sku": "Red Bull",
     "slug": "red-bull",
     "type": "Food",
@@ -20,9 +20,9 @@
   },
   {
     "brand": "Nestle",
-    "category": "Food",
+    "category": "Convenience",
     "description": "",
-    "id": "4310122e-bbd1-42ed-9f8d-377f2a391001",
+    "id": "Bubble Gum 6 Pack",
     "images": [
       {
         "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_5EBD2yPkT0claOLwW6P7axXK.jpeg",
@@ -38,10 +38,10 @@
     "updatedAt": 1677163891141
   },
   {
-    "brand": "Nestle",
-    "category": "Food",
+    "brand": "Coca Cola",
+    "category": "Convenience",
     "description": "",
-    "id": "4310122e-bbd1-42ed-9f8d-377f2a391002",
+    "id": "Coca-Cola 6 Pack",
     "images": [
       {
         "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_0Ps3EL2qBe1Zc90EXngPbxjw.jpeg",
@@ -50,7 +50,7 @@
     ],
     "materialAndCare": "",
     "name": "Coca-Cola 6 Pack",
-    "price": 10,
+    "price": 12,
     "sku": "Coca-Cola 6 Pack",
     "slug": "coca-cola-6-pack",
     "type": "Food",
@@ -58,9 +58,9 @@
   },
   {
     "brand": "Nestle",
-    "category": "Food",
+    "category": "Convenience",
     "description": "",
-    "id": "4310122e-bbd1-42ed-9f8d-377f2a391003",
+    "id": "Spicy Chicken Biscuit",
     "images": [
       {
         "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_7WwJIMt3iMKqrlCbFmMK4aBt.jpeg",
@@ -77,9 +77,9 @@
   },
   {
     "brand": "Nestle",
-    "category": "Food",
+    "category": "Convenience",
     "description": "",
-    "id": "4310122e-bbd1-42ed-9f8d-377f2a391004",
+    "id": "Turkey & Swiss on Brioche",
     "images": [
       {
         "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_9G3eiDEsmK97jZw0B2zL154C.jpeg",
@@ -98,7 +98,7 @@
     "brand": "Nestle",
     "category": "Food",
     "description": "",
-    "id": "4310122e-bbd1-42ed-9f8d-377f2a391005",
+    "id": "6\" Roast Beef & American Cheese",
     "images": [
       {
         "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_mDqKYMHSQvcGXHlemse12n5E.jpeg",
@@ -110,6 +110,310 @@
     "price": 6,
     "sku": "6\" Roast Beef & American Cheese",
     "slug": "6-roast- beef-and-american-cheese",
+    "type": "Food",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Nestle",
+    "category": "Convenience",
+    "description": "",
+    "id": "9\" Italian Sub",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_GJTpmKOtqFbyGc6mjTfMDdSz.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "9\" Italian Sub",
+    "price": 9,
+    "sku": "9\" Italian Sub",
+    "slug": "9-italian-sub",
+    "type": "Food",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Coca Cola",
+    "category": "Convenience",
+    "description": "",
+    "id": "Mini Coca Cola Bottle",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_ZB8nDOrscOassJIi4UVndHRO.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Mini Coca Cola Bottle",
+    "price": 5,
+    "sku": "Mini Coca Cola Bottle",
+    "slug": "mini-coca-cola-bottle",
+    "type": "Food",
+    "updatedAt": 1677163891142
+  },
+  {
+    "brand": "Nestle",
+    "category": "Convenience",
+    "description": "",
+    "id": "9\" Ham & Cheddar Sub",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_GJTpmKOtqFbyGc6mjTfMDdSz.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "9\" Ham & Cheddar Sub",
+    "price": 9,
+    "sku": "9\" Ham & Cheddar Sub",
+    "slug": "9-ham-cheddar-sub",
+    "type": "Food",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Fuel",
+    "category": "Fuel",
+    "description": "",
+    "id": "Gasoline",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_SRzX19XRi47AreQKyuZu0jHr.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Gasoline",
+    "price": 0,
+    "sku": "Gasoline",
+    "slug": "gasoline",
+    "type": "Fuel",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Pure Life",
+    "category": "Convenience",
+    "description": "",
+    "id": "Pure Life Bottled Water",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_Ob1N9KZ5FMhg5TqVcl9D18M3.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Pure Life Bottled Water",
+    "price": 2,
+    "sku": "Pure Life Bottled Water",
+    "slug": "pure-life-bottled-water",
+    "type": "Food",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Nestle",
+    "category": "Convenience",
+    "description": "",
+    "id": "Coffee (Large)",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_bvAnVdWL6oRSr9lVfPh8zgoH.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Coffee (Large)",
+    "price": 2,
+    "sku": "Coffee (Large)",
+    "slug": "coffee-large",
+    "type": "Food",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Nestle",
+    "category": "Convenience",
+    "description": "",
+    "id": "Coffee (Medium)",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_bvAnVdWL6oRSr9lVfPh8zgoH.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Coffee (Medium)",
+    "price": 1.5,
+    "sku": "Coffee (Medium)",
+    "slug": "coffee-medium",
+    "type": "Food",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Nestle",
+    "category": "Convenience",
+    "description": "",
+    "id": "Coffee (Small)",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_bvAnVdWL6oRSr9lVfPh8zgoH.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Coffee (Small)",
+    "price": 1,
+    "sku": "Coffee (Small)",
+    "slug": "coffee-small",
+    "type": "Food",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Nestle",
+    "category": "Car Wash",
+    "description": "",
+    "id": "Absolutely Everything Car Wash",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_hfFBKY6v0JrTgvy0v2QWNpwR.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Absolutely Everything Car Wash",
+    "price": 30,
+    "sku": "Absolutely Everything Car Wash",
+    "slug": "absolutely-everything-car-wash",
+    "type": "Car Wash",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Nestle",
+    "category": "Car Wash",
+    "description": "",
+    "id": "Top to Bottom Car Wash",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_hfFBKY6v0JrTgvy0v2QWNpwR.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Top to Bottom Car Wash",
+    "price": 20,
+    "sku": "Top to Bottom Car Wash",
+    "slug": "top-bottom-car-wash",
+    "type": "Car Wash",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Nestle",
+    "category": "Car Wash",
+    "description": "",
+    "id": "Wash & Rinse Car Wash",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_hfFBKY6v0JrTgvy0v2QWNpwR.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Wash & Rinse Car Wash",
+    "price": 10,
+    "sku": "Wash & Rinse Car Wash",
+    "slug": "was-and-rinse-car-wash",
+    "type": "Car Wash",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Clif Bar",
+    "category": "Convenience",
+    "description": "",
+    "id": "Clif Bar",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_xY7rJ4t0pJGxpmUwwXZhANgQ.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Clif Bar",
+    "price": 8,
+    "sku": "Clif Bar",
+    "slug": "clif-bar",
+    "type": "Food",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Maynards",
+    "category": "Convenience",
+    "description": "",
+    "id": "Maynard Candies",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_gmq0VBbyTmfRjdmlKclp4hJI.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Maynard Candies",
+    "price": 8,
+    "sku": "Maynard Candies",
+    "slug": "maynard-candies",
+    "type": "Food",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Twizzler",
+    "category": "Convenience",
+    "description": "",
+    "id": "Twizzlers Candies",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_kAZO3vz7EHBS7mPioqLaY0tr.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Twizzlers Candies",
+    "price": 8,
+    "sku": "Twizzlers Candies",
+    "slug": "twizzlers-candies",
+    "type": "Food",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Twizzler",
+    "category": "EV Charging",
+    "description": "",
+    "id": "EV Charging",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_5WC7RqWYXr6IdeQFflW14efe.png",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "EV Charging 1 kWh",
+    "price": 0,
+    "sku": "EV Charging 1 kWh",
+    "slug": "ev-charging-1-kwh",
+    "type": "EV Charging",
+    "updatedAt": 1677163891145
+  },
+  {
+    "brand": "Twizzler",
+    "category": "Convenience",
+    "description": "",
+    "id": "Chocolate Bar",
+    "images": [
+      {
+        "url": "https://voucherify-uploads.s3.amazonaws.com/org_ZAtsKDUt/img_vsyIadRYhlxPUW0fGAmb0W9e.jpeg",
+        "alt": ""
+      }
+    ],
+    "materialAndCare": "",
+    "name": "Chocolate Bar",
+    "price": 8,
+    "sku": "Chocolate Bar",
+    "slug": "chocolate-bar",
     "type": "Food",
     "updatedAt": 1677163891145
   }

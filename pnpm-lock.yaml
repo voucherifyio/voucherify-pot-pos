@@ -88,6 +88,9 @@ importers:
       algoliasearch:
         specifier: ^4.14.3
         version: 4.16.0
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
       focus-visible:
         specifier: ^5.2.0
         version: 5.2.0

@@ -17,29 +17,31 @@ export interface ProductsProps {
 export const ProductsList = ({ onClick }: ProductsProps) => {
   return (
     <SimpleGrid minChildWidth="120px" spacing={2}>
-      {products.map((product) => (
-        <Card
-          _hover={{ bg: 'lightgray' }}
-          size={'sm'}
-          cursor={'pointer'}
-          onClick={() => onClick?.(product.id)}
-          key={product.id}
-        >
-          <CardBody alignContent={'center'}>
-            {product.images[0] && (
-              <Image
-                src={product.images[0]?.url}
-                alt={product.images[0]?.alt}
-                height={Number(180 / 3)}
-                width={Number(145 / 3)}
-                quality={90}
-                style={{ objectFit: 'cover' }}
-              />
-            )}
-            <Text fontSize="xs">{product.name}</Text>
-          </CardBody>
-        </Card>
-      ))}
+      {products
+        .sort((p1, p2) => p1.type.localeCompare(p2.type))
+        .map((product) => (
+          <Card
+            _hover={{ bg: 'lightgray' }}
+            size={'sm'}
+            cursor={'pointer'}
+            onClick={() => onClick?.(product.id)}
+            key={product.id}
+          >
+            <CardBody alignContent={'center'}>
+              {product.images[0] && (
+                <Image
+                  src={product.images[0]?.url}
+                  alt={product.images[0]?.alt}
+                  height={Number(180 / 3)}
+                  width={Number(145 / 3)}
+                  quality={90}
+                  style={{ objectFit: 'cover' }}
+                />
+              )}
+              <Text fontSize="xs">{product.name}</Text>
+            </CardBody>
+          </Card>
+        ))}
     </SimpleGrid>
   )
 }

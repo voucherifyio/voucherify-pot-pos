@@ -1,9 +1,194 @@
 import { randomUUID } from 'crypto'
-import NextAuth from 'next-auth'
+import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getCRSFCookieInfo } from 'server/auth-utils'
+import { getCustomer, upsertCustomer } from '@composable/voucherify'
+import { Analytics } from '@segment/analytics-node'
+import { voucherify } from '@composable/voucherify/src/voucherify-config'
+
+const getAnalitics = () => {
+  if (!process.env.SEGMENTIO_SOURCE_WRITE_KEY) {
+    throw new Error('SEGMENTIO_SOURCE_WRITE_KEY not defined in env variables')
+  }
+
+  return new Analytics({ writeKey: process.env.SEGMENTIO_SOURCE_WRITE_KEY })
+}
+
+export const rawAuthOptions: NextAuthOptions = {
+  pages: {},
+  providers: [
+    CredentialsProvider({
+      id: 'anon',
+      name: 'Anonymous',
+      credentials: {},
+      async authorize() {
+        const anonymousUser = {
+          id: randomUUID(),
+          name: `anonymous_user`,
+          email: `anonymous_user`,
+          image: '',
+          phoneNumber: '',
+        }
+        //anyone can do an anonymous login
+        return anonymousUser
+      },
+    }),
+
+    CredentialsProvider({
+      id: 'only-phone',
+      name: 'Only phone',
+      credentials: {
+        phone: { label: 'Phone number', type: 'text' },
+      },
+      async authorize(credentials, req) {
+        if (!credentials?.phone) {
+          return null
+        }
+
+        let voucherifyCustomer = await getCustomer(credentials.phone)
+
+        if (!voucherifyCustomer) {
+          voucherifyCustomer = {
+            id: '',
+            source_id: credentials.phone,
+            email: undefined,
+            registeredCustomer: false,
+            registrationDate: '2024-03-07',
+            phone: credentials.phone,
+            name: undefined,
+          }
+
+          const analytics = getAnalitics()
+          analytics.identify({
+            userId: credentials.phone,
+            traits: {
+              phone: credentials.phone,
+            },
+          })
+        }
+
+        if (!voucherifyCustomer) {
+          return null
+        }
+
+        // TODO send event to segment
+        const customer = {
+          id: voucherifyCustomer.id,
+          voucherifyId: voucherifyCustomer.id,
+          sourceId: voucherifyCustomer.source_id,
+          name: voucherifyCustomer.name,
+          email: voucherifyCustomer.email,
+          phoneNumber: voucherifyCustomer.phone,
+          registeredCustomer: voucherifyCustomer.registeredCustomer,
+          registrationDate: voucherifyCustomer.registrationDate,
+          image: '',
+        }
+        return customer
+      },
+    }),
+    CredentialsProvider({
+      id: 'credentials',
+      name: 'Credentials',
+      // `credentials` is used to generate a form on the sign in page.
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {
+        username: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials, req) {
+        // Add logic here to look up the user from the credentials supplied
+        const user = {
+          id: randomUUID(),
+          name: 'Test User',
+          email: 'test@email.com',
+          image: '',
+        }
+
+        if (
+          credentials?.username === 'test@email.com' &&
+          credentials?.password === 'password'
+        ) {
+          // Any object returned will be saved in `user` property of the JWT
+          return user
+        } else {
+          // If you return null then an error will be displayed advising the user to check their details.
+          return null
+          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+        }
+      },
+    }),
+  ],
+  callbacks: {
+    jwt: async ({ token, user }) => {
+      // console.log('JWT', { user, token})
+
+      if (token?.name === 'anonymous_user') {
+        return {
+          ...token,
+          id: token.sub,
+          loggedIn: false,
+        }
+      }
+      const newToken = {
+        ...token,
+        id: token.sub,
+        loggedIn: true,
+      }
+
+      if (user?.phoneNumber) {
+        newToken.phoneNumber = user.phoneNumber
+      }
+      if (user?.sourceId) {
+        newToken.sourceId = user.sourceId
+      }
+      if (user?.voucherifyId) {
+        newToken.voucherifyId = user.voucherifyId
+      }
+      if (user?.registeredCustomer) {
+        newToken.registeredCustomer = user.registeredCustomer
+      }
+      if (user?.registrationDate) {
+        newToken.registrationDate = user.registrationDate
+      }
+
+      return newToken
+    },
+    session: async ({ session, user, token }) => {
+      // console.log('SESSION', {session, user, token})
+
+      const newSession = {
+        ...session,
+        id: token?.sub,
+        loggedIn: (token?.loggedIn as boolean) ?? false,
+      }
+
+      if (newSession?.user && token.phoneNumber) {
+        newSession.user.phoneNumber = token.phoneNumber
+      }
+      if (newSession?.user && token.sourceId) {
+        newSession.user.sourceId = token.sourceId
+      }
+      if (newSession?.user && token.voucherifyId) {
+        newSession.user.voucherifyId = token.voucherifyId
+      }
+      if (newSession?.user && token.registrationDate) {
+        newSession.user.registrationDate = token.registrationDate
+      }
+      if (newSession?.user && token.registeredCustomer) {
+        newSession.user.registeredCustomer = token.registeredCustomer
+      }
+
+      return newSession
+    },
+  },
+  session: {
+    updateAge: 0,
+  },
+}
 
 const authOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   const actionList = req.query.nextauth || []
@@ -11,102 +196,13 @@ const authOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   if (
     actionList?.includes('signout') ||
     actionList?.includes('credentials') ||
-    actionList?.includes('anon')
+    actionList?.includes('anon') ||
+    actionList?.includes('only-phone')
   ) {
     res.setHeader('Set-Cookie', getCRSFCookieInfo(req).cookieExpire)
   }
 
-  return await NextAuth(req, res, {
-    pages: {},
-    providers: [
-      // See https://next-auth.js.org/providers/google
-      GoogleProvider({
-        clientId: `${process.env.GOOGLE_CLIENT_ID}`,
-        clientSecret: `${process.env.GOOGLE_CLIENT_SECRET}`,
-        authorization: {
-          params: {
-            prompt: 'consent',
-            access_type: 'offline',
-            response_type: 'code',
-          },
-        },
-      }),
-      CredentialsProvider({
-        id: 'anon',
-        name: 'Anonymous',
-        credentials: {},
-        async authorize() {
-          const anonymousUser = {
-            id: randomUUID(),
-            name: `anonymous_user`,
-            email: `anonymous_user`,
-            image: '',
-          }
-          //anyone can do an anonymous login
-          return anonymousUser
-        },
-      }),
-      CredentialsProvider({
-        id: 'credentials',
-        name: 'Credentials',
-        // `credentials` is used to generate a form on the sign in page.
-        // You can specify which fields should be submitted, by adding keys to the `credentials` object.
-        // e.g. domain, username, password, 2FA token, etc.
-        // You can pass any HTML attribute to the <input> tag through the object.
-        credentials: {
-          username: { label: 'Email', type: 'text' },
-          password: { label: 'Password', type: 'password' },
-        },
-        async authorize(credentials, req) {
-          // Add logic here to look up the user from the credentials supplied
-          const user = {
-            id: randomUUID(),
-            name: 'Test User',
-            email: 'test@email.com',
-            image: '',
-          }
-
-          if (
-            credentials?.username === 'test@email.com' &&
-            credentials?.password === 'password'
-          ) {
-            // Any object returned will be saved in `user` property of the JWT
-            return user
-          } else {
-            // If you return null then an error will be displayed advising the user to check their details.
-            return null
-            // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
-          }
-        },
-      }),
-    ],
-    callbacks: {
-      jwt: async ({ token }) => {
-        if (token?.name === 'anonymous_user') {
-          return {
-            ...token,
-            id: token.sub,
-            loggedIn: false,
-          }
-        }
-        return {
-          ...token,
-          id: token.sub,
-          loggedIn: true,
-        }
-      },
-      session: async ({ session, user, token }) => {
-        return {
-          ...session,
-          id: token?.sub,
-          loggedIn: (token?.loggedIn as boolean) ?? false,
-        }
-      },
-    },
-    session: {
-      updateAge: 0,
-    },
-  })
+  return await NextAuth(req, res, rawAuthOptions)
 }
 
 export default authOptions

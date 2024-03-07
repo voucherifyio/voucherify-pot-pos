@@ -5,6 +5,7 @@ import {
   ShippingMethod,
   Order,
   User,
+  UserSession,
   Product,
   SitemapField,
 } from './index'
@@ -19,27 +20,41 @@ export interface CommerceService {
     productId: string
     variantId?: string
     quantity: number
+    user?: UserSession
   }): Promise<Cart>
 
   createCart(): Promise<Cart>
 
-  deleteCartItem(params: { cartId: string; productId: string }): Promise<Cart>
+  deleteCartItem(params: {
+    cartId: string
+    productId: string
+    user?: UserSession
+  }): Promise<Cart>
 
-  getCart(params: { cartId: string }): Promise<Cart | null>
+  getCart(params: { cartId: string; user?: UserSession }): Promise<Cart | null>
 
   updateCartItem(params: {
     cartId: string
     productId: string
     quantity: number
+    user?: UserSession
   }): Promise<Cart>
 
-  addVoucher(params: { cartId: string; code: string }): Promise<{
+  addVoucher(params: {
+    cartId: string
+    code: string
+    user?: UserSession
+  }): Promise<{
     cart: Cart
     success: boolean
     errorMessage?: string
   }>
 
-  deleteVoucher(params: { cartId: string; code: string }): Promise<Cart>
+  deleteVoucher(params: {
+    cartId: string
+    code: string
+    user?: UserSession
+  }): Promise<Cart>
 
   /**
    * Catalog methods

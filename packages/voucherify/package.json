@@ -11,7 +11,8 @@
   },
   "dependencies": {
     "@composable/types": "workspace:*",
-    "@voucherify/sdk": "^2.6.0"
+    "@voucherify/sdk": "^2.6.0",
+    "dayjs": "^1.11.10"
   },
   "devDependencies": {
     "@types/node": "^18.6.3",

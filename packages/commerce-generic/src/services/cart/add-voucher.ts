@@ -8,6 +8,7 @@ import { addVoucherToCart } from '@composable/voucherify'
 export const addVoucher: CommerceService['addVoucher'] = async ({
   cartId,
   code,
+  user,
 }) => {
   const cart = await getCartFromStorage(cartId)
 
@@ -21,7 +22,7 @@ export const addVoucher: CommerceService['addVoucher'] = async ({
     cart: cartWithDiscount,
     errorMessage,
     success,
-  } = await addVoucherToCart(cart, code)
+  } = await addVoucherToCart(cart, code, user)
 
   if (success) {
     await saveCart(cartWithDiscount)

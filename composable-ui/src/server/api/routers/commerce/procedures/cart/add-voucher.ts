@@ -9,6 +9,9 @@ export const addVoucher = protectedProcedure
       code: z.string(),
     })
   )
-  .mutation(async ({ input }) => {
-    return await commerce.addVoucher({ ...input })
+  .mutation(async ({ input, ctx }) => {
+    const user = ctx.session.user.sourceId
+      ? { sourceId: ctx.session.user.sourceId }
+      : undefined
+    return await commerce.addVoucher({ ...input, user })
   })

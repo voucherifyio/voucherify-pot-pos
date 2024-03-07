@@ -23,6 +23,7 @@ import {
   CartTotal,
 } from './cart'
 import { ProductsList } from './pos/products-list'
+import { Customer } from './pos/customer'
 
 export const PosPage = () => {
   const router = useRouter()
@@ -160,6 +161,7 @@ export const PosPage = () => {
           )}
         </GridItem>
         <GridItem w="100%">
+          <Customer />
           <Text
             textStyle={{ base: 'Mobile/L', md: 'Desktop/L' }}
             color={'shading.700'}

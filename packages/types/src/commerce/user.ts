@@ -5,6 +5,10 @@ export interface User {
   address: string
 }
 
+export interface UserSession {
+  sourceId: string
+}
+
 export interface LoginCredentials {
   email: string
   password: string

@@ -1,7 +1,7 @@
 import { type GetServerSidePropsContext } from 'next'
 import { getServerSession } from 'next-auth'
 
-import authOptions from '../pages/api/auth/[...nextauth]'
+import { rawAuthOptions } from '../pages/api/auth/[...nextauth]'
 
 /**
  * Wrapper for getServerSession, used in trpc createContext and the
@@ -17,6 +17,5 @@ export const getServerAuthSession = async (ctx: {
   req: GetServerSidePropsContext['req']
   res: GetServerSidePropsContext['res']
 }) => {
-  // TODO: authOptions type
-  return await getServerSession(ctx.req, ctx.res, authOptions as any)
+  return await getServerSession(ctx.req, ctx.res, rawAuthOptions)
 }

@@ -1,4 +1,4 @@
-import { Cart } from '@composable/types'
+import { Cart, UserSession } from '@composable/types'
 import {
   PromotionsValidateResponse,
   StackableRedeemableResponse,
@@ -14,6 +14,7 @@ import { cartToVoucherifyOrder } from './cart-to-voucherify-order'
 type ValidateDiscountsParam = {
   cart: Cart
   code?: string
+  user?: UserSession
   voucherify: ReturnType<typeof VoucherifyServerSide>
 }
 
@@ -31,7 +32,7 @@ export type ValidateStackableResult =
 export const validateCouponsAndPromotions = async (
   params: ValidateDiscountsParam
 ): Promise<ValidateCouponsAndPromotionsResponse> => {
-  const { cart, code, voucherify } = params
+  const { cart, code, voucherify, user } = params
 
   const appliedCodes =
     cart.vouchersApplied?.map((voucher) => voucher.code) || []
@@ -39,7 +40,12 @@ export const validateCouponsAndPromotions = async (
   const order = cartToVoucherifyOrder(cart)
   const codes = code ? [...appliedCodes, code] : appliedCodes
 
-  const promotionsResult = await voucherify.promotions.validate({ order })
+  const customer = user?.sourceId ? { source_id: user.sourceId } : undefined
+
+  const promotionsResult = await voucherify.promotions.validate({
+    order,
+    customer,
+  })
   if (!codes.length && !promotionsResult.promotions?.length) {
     return { promotionsResult, validationResult: false }
   }
@@ -50,6 +56,7 @@ export const validateCouponsAndPromotions = async (
       ...getRedeemablesForValidationFromPromotions(promotionsResult),
     ],
     order,
+    customer,
     options: { expand: ['order'] },
   })
 

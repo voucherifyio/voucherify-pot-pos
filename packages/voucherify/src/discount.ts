@@ -1,13 +1,15 @@
-import { Cart, Order } from '@composable/types'
+import { Cart, Order, UserSession } from '@composable/types'
 import { validateCouponsAndPromotions } from './validate-discounts'
 import { isRedeemableApplicable } from './is-redeemable-applicable'
 import { cartWithDiscount } from './cart-with-discount'
 import { voucherify } from './voucherify-config'
 import { orderToVoucherifyOrder } from './order-to-voucherify-order'
+import dayjs from 'dayjs'
 
 export const deleteVoucherFromCart = async (
   cart: Cart,
-  code: string
+  code: string,
+  user?: UserSession
 ): Promise<{ cart: Cart; success: boolean; errorMessage?: string }> => {
   const cartAfterDeletion: Cart = {
     ...cart,
@@ -15,25 +17,30 @@ export const deleteVoucherFromCart = async (
       (voucher) => voucher.code !== code
     ),
   }
-  const updatedCart = await updateCartDiscount(cartAfterDeletion)
+  const updatedCart = await updateCartDiscount(cartAfterDeletion, user)
   return {
     cart: updatedCart,
     success: true,
   }
 }
 
-export const updateCartDiscount = async (cart: Cart): Promise<Cart> => {
+export const updateCartDiscount = async (
+  cart: Cart,
+  user?: UserSession
+): Promise<Cart> => {
   const { validationResult, promotionsResult } =
     await validateCouponsAndPromotions({
       cart,
       voucherify,
+      user,
     })
   return cartWithDiscount(cart, validationResult, promotionsResult)
 }
 
 export const addVoucherToCart = async (
   cart: Cart,
-  code: string
+  code: string,
+  user?: UserSession
 ): Promise<{ cart: Cart; success: boolean; errorMessage?: string }> => {
   if (cart.vouchersApplied?.some((voucher) => voucher.code === code)) {
     return {
@@ -47,6 +54,7 @@ export const addVoucherToCart = async (
       cart,
       code,
       voucherify,
+      user,
     })
 
   const { isApplicable, error } = isRedeemableApplicable(code, validationResult)
@@ -67,6 +75,55 @@ export const addVoucherToCart = async (
     cart,
     success: isApplicable,
     errorMessage: error || 'This voucher is not applicable',
+  }
+}
+
+export const getCustomer = async (phone: string) => {
+  try {
+    const customer = await voucherify.customers.get(phone) // phone in source_id
+    if (customer.object !== 'customer') {
+      return false
+    }
+    return {
+      id: customer.id,
+      source_id: customer.source_id,
+      email: customer.email,
+      phone: customer.phone,
+      name: customer.name,
+      registeredCustomer: !!customer.metadata['registered_customer'] || false,
+      registrationDate: customer.metadata['registration_date'],
+    }
+  } catch (e) {
+    console.log(`Customer not found`, e)
+    return false
+  }
+}
+
+export const upsertCustomer = async (phone: string) => {
+  try {
+    const customer = await voucherify.customers.create({
+      source_id: phone,
+      phone,
+      metadata: {
+        registered_customer: false,
+        registration_date: dayjs().format('YYYY-MM-DD'),
+      },
+    })
+    if (customer.object !== 'customer') {
+      return false
+    }
+    return {
+      id: customer.id,
+      source_id: customer.source_id,
+      email: customer.email,
+      phone: customer.phone,
+      name: customer.name,
+      registeredCustomer: !!customer.metadata['registered_customer'] || false,
+      registrationDate: customer.metadata['registration_date'],
+    }
+  } catch (e) {
+    console.log(`Customer not found`, e)
+    return false
   }
 }
 

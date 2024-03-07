@@ -1,9 +1,5 @@
 lockfileVersion: '6.0'
 
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false
-
 importers:
 
   .:
@@ -50,6 +46,9 @@ importers:
       '@composable/ui':
         specifier: workspace:*
         version: link:../packages/ui
+      '@composable/voucherify':
+        specifier: workspace:*
+        version: link:../packages/voucherify
       '@emotion/react':
         specifier: ^11.9.3
         version: 11.10.6(@types/react@18.0.31)(react@18.2.0)
@@ -59,6 +58,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^2.9.7
         version: 2.9.11(react-hook-form@7.43.8)
+      '@segment/analytics-node':
+        specifier: ^2.1.0
+        version: 2.1.0
       '@stripe/react-stripe-js':
         specifier: ^1.16.4
         version: 1.16.5(@stripe/stripe-js@1.52.0)(react-dom@18.2.0)(react@18.2.0)
@@ -241,7 +243,7 @@ importers:
         version: 8.8.0(eslint@7.32.0)
       eslint-config-turbo:
         specifier: latest
-        version: 1.12.4(eslint@7.32.0)
+        version: 1.12.5(eslint@7.32.0)
       eslint-plugin-react:
         specifier: 7.28.0
         version: 7.28.0(eslint@7.32.0)
@@ -397,6 +399,9 @@ importers:
       '@voucherify/sdk':
         specifier: ^2.6.0
         version: 2.6.0
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
     devDependencies:
       '@types/node':
         specifier: ^18.6.3
@@ -3897,6 +3902,18 @@ packages:
       - debug
     dev: false
 
+  /@lukeed/csprng@1.1.0:
+    resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
+    engines: {node: '>=8'}
+    dev: false
+
+  /@lukeed/uuid@2.0.1:
+    resolution: {integrity: sha512-qC72D4+CDdjGqJvkFMMEAtancHUQ7/d/tAiHf64z8MopFDmcrtbcJuerDtFceuAfQJ2pDSfCKCtbqoGBNnwg0w==}
+    engines: {node: '>=8'}
+    dependencies:
+      '@lukeed/csprng': 1.1.0
+    dev: false
+
   /@mdx-js/mdx@1.6.22:
     resolution: {integrity: sha512-AMxuLxPz2j5/6TpF/XSdKpQP1NlG0z11dFOlq+2IP/lSgl11GY8ji6S/rgsViN/L0BDvHvUMruRb7ub+24LUYA==}
     dependencies:
@@ -4459,6 +4476,36 @@ packages:
 
   /@rushstack/eslint-patch@1.2.0:
     resolution: {integrity: sha512-sXo/qW2/pAcmT43VoRKOJbDOfV3cYpq3szSVfIThQXNt+E4DfKj361vaAt3c88U5tPUxzEswam7GW48PJqtKAg==}
+    dev: false
+
+  /@segment/analytics-core@1.5.0:
+    resolution: {integrity: sha512-xFM9sS4ltRWDnNE6bD/bwLAGGBI1Doidf35J6ePyuOfecZ7c0sADtk9xR1QD98CDDFVaQcrfV/O1l4rBZvCm4A==}
+    dependencies:
+      '@lukeed/uuid': 2.0.1
+      '@segment/analytics-generic-utils': 1.2.0
+      dset: 3.1.3
+      tslib: 2.5.0
+    dev: false
+
+  /@segment/analytics-generic-utils@1.2.0:
+    resolution: {integrity: sha512-DfnW6mW3YQOLlDQQdR89k4EqfHb0g/3XvBXkovH1FstUN93eL1kfW9CsDcVQyH3bAC5ZsFyjA/o/1Q2j0QeoWw==}
+    dependencies:
+      tslib: 2.5.0
+    dev: false
+
+  /@segment/analytics-node@2.1.0:
+    resolution: {integrity: sha512-o50FA7CjfqnaSCPZ93DI15hOrqdu4fEYJFBlYkh7kbrARGTSGi3T5CRp3uM/un9oz0cJFoP/0+a2urXlAGE9aw==}
+    engines: {node: '>=18'}
+    dependencies:
+      '@lukeed/uuid': 2.0.1
+      '@segment/analytics-core': 1.5.0
+      '@segment/analytics-generic-utils': 1.2.0
+      buffer: 6.0.3
+      jose: 5.2.2
+      node-fetch: 2.6.9
+      tslib: 2.5.0
+    transitivePeerDependencies:
+      - encoding
     dev: false
 
   /@sinclair/typebox@0.25.24:
@@ -7883,6 +7930,13 @@ packages:
       base64-js: 1.5.1
       ieee754: 1.2.1
 
+  /buffer@6.0.3:
+    resolution: {integrity: sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==}
+    dependencies:
+      base64-js: 1.5.1
+      ieee754: 1.2.1
+    dev: false
+
   /builtin-status-codes@3.0.0:
     resolution: {integrity: sha512-HpGFw18DgFWlncDfjTa2rcQ4W88O1mC8e8yZ2AvQY5KDaktSTwo+KRf6nHK6FRI5FyRyb/5T6+TSxfP7QyGsmQ==}
     dev: false
@@ -8857,6 +8911,10 @@ packages:
       whatwg-url: 11.0.0
     dev: true
 
+  /dayjs@1.11.10:
+    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
+    dev: false
+
   /debug@2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
     peerDependencies:
@@ -9209,6 +9267,11 @@ packages:
     engines: {node: '>=10'}
     dev: false
 
+  /dset@3.1.3:
+    resolution: {integrity: sha512-20TuZZHCEZ2O71q9/+8BwKwZ0QtD9D8ObhrihJPr+vLLYlSuAU3/zL4cSlgbfeoGHTjCSJBa7NGcrF9/Bx/WJQ==}
+    engines: {node: '>=4'}
+    dev: false
+
   /duplexer3@0.1.5:
     resolution: {integrity: sha512-1A8za6ws41LQgv9HrE/66jyC5yuSjQ3L/KOpFtoBilsAK2iA2wuS5rTt1OCzIvtS2V7nVmedsUU+DGRcjBmOYA==}
     dev: true
@@ -9505,13 +9568,13 @@ packages:
       eslint: 7.32.0
     dev: false
 
-  /eslint-config-turbo@1.12.4(eslint@7.32.0):
-    resolution: {integrity: sha512-5hqEaV6PNmAYLL4RTmq74OcCt8pgzOLnfDVPG/7PUXpQ0Mpz0gr926oCSFukywKKXjdum3VHD84S7Z9A/DqTAw==}
+  /eslint-config-turbo@1.12.5(eslint@7.32.0):
+    resolution: {integrity: sha512-wXytbX+vTzQ6rwgM6sIr447tjYJBlRj5V/eBFNGNXw5Xs1R715ppPYhbmxaFbkrWNQSGJsWRrYGAlyq0sT/OsQ==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
       eslint: 7.32.0
-      eslint-plugin-turbo: 1.12.4(eslint@7.32.0)
+      eslint-plugin-turbo: 1.12.5(eslint@7.32.0)
     dev: false
 
   /eslint-import-resolver-node@0.3.7:
@@ -9686,8 +9749,8 @@ packages:
       string.prototype.matchall: 4.0.8
     dev: false
 
-  /eslint-plugin-turbo@1.12.4(eslint@7.32.0):
-    resolution: {integrity: sha512-3AGmXvH7E4i/XTWqBrcgu+G7YKZJV/8FrEn79kTd50ilNsv+U3nS2IlcCrQB6Xm2m9avGD9cadLzKDR1/UF2+g==}
+  /eslint-plugin-turbo@1.12.5(eslint@7.32.0):
+    resolution: {integrity: sha512-cXy7mCzAdngBTJIWH4DASXHy0vQpujWDBqRTu0YYqCN/QEGsi3HWM+STZEbPYELdjtm5EsN2HshOSSqWnjdRHg==}
     peerDependencies:
       eslint: '>6.6.0'
     dependencies:
@@ -12333,6 +12396,10 @@ packages:
 
   /jose@4.13.1:
     resolution: {integrity: sha512-MSJQC5vXco5Br38mzaQKiq9mwt7lwj2eXpgpRyQYNHYt2lq1PjkWa7DLXX0WVcQLE9HhMh3jPiufS7fhJf+CLQ==}
+    dev: false
+
+  /jose@5.2.2:
+    resolution: {integrity: sha512-/WByRr4jDcsKlvMd1dRJnPfS1GVO3WuKyaurJ/vvXcOaUQO8rnNObCQMlv/5uCceVQIq5Q4WLF44ohsdiTohdg==}
     dev: false
 
   /js-string-escape@1.0.1:
@@ -17792,3 +17859,7 @@ packages:
   /zwitch@1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
     dev: false
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false

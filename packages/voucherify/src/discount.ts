@@ -150,6 +150,7 @@ export const orderPaid = async (order: Order, user?: UserSession) => {
   } else {
     return await voucherify.orders.create({
       ...voucherifyOrder,
+      status: 'PAID',
       customer,
     })
   }

@@ -114,25 +114,6 @@
     "updatedAt": 1677163891145
   },
   {
-    "brand": "Aeroplan",
-    "category": "Points",
-    "description": "",
-    "id": "Loyalty Points Transfer - Aeroplan",
-    "images": [
-      {
-        "url": "",
-        "alt": ""
-      }
-    ],
-    "materialAndCare": "",
-    "name": "Loyalty Points Transfer - Aeroplan",
-    "price": 0,
-    "sku": "Loyalty Points Transfer - Aeroplan",
-    "slug": "loyalty-points-transfert-aeroplan",
-    "type": "Points",
-    "updatedAt": 1677163891145
-  },
-  {
     "brand": "Nestle",
     "category": "Convenience",
     "description": "",
@@ -434,25 +415,6 @@
     "sku": "Chocolate Bar",
     "slug": "chocolate-bar",
     "type": "Food",
-    "updatedAt": 1677163891145
-  },
-  {
-    "brand": "Food",
-    "category": "Convenience",
-    "description": "",
-    "id": "Shipping",
-    "images": [
-      {
-        "url": "",
-        "alt": ""
-      }
-    ],
-    "materialAndCare": "",
-    "name": "Shipping",
-    "price": 8.99,
-    "sku": "Shipping",
-    "slug": "shipping",
-    "type": "Shipping",
     "updatedAt": 1677163891145
   }
 ]

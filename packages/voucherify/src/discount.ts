@@ -2,7 +2,7 @@ import { Cart, Order, UserSession } from '@composable/types'
 import { validateCouponsAndPromotions } from './validate-discounts'
 import { isRedeemableApplicable } from './is-redeemable-applicable'
 import { cartWithDiscount } from './cart-with-discount'
-import { voucherify } from './voucherify-config'
+import { getVoucherify } from './voucherify-config'
 import { orderToVoucherifyOrder } from './order-to-voucherify-order'
 import dayjs from 'dayjs'
 
@@ -31,7 +31,7 @@ export const updateCartDiscount = async (
   const { validationResult, promotionsResult } =
     await validateCouponsAndPromotions({
       cart,
-      voucherify,
+      voucherify: getVoucherify(),
       user,
     })
   return cartWithDiscount(cart, validationResult, promotionsResult)
@@ -53,7 +53,7 @@ export const addVoucherToCart = async (
     await validateCouponsAndPromotions({
       cart,
       code,
-      voucherify,
+      voucherify: getVoucherify(),
       user,
     })
 
@@ -80,6 +80,7 @@ export const addVoucherToCart = async (
 
 export const getCustomer = async (phone: string) => {
   try {
+    const voucherify = getVoucherify()
     const customer = await voucherify.customers.get(phone) // phone in source_id
     if (customer.object !== 'customer') {
       return false
@@ -100,6 +101,7 @@ export const getCustomer = async (phone: string) => {
 
 export const upsertCustomer = async (phone: string) => {
   try {
+    const voucherify = getVoucherify()
     const customer = await voucherify.customers.create({
       source_id: phone,
       phone,
@@ -127,7 +129,7 @@ export const upsertCustomer = async (phone: string) => {
 
 export const orderPaid = async (order: Order, user?: UserSession) => {
   const voucherifyOrder = orderToVoucherifyOrder(order)
-
+  const voucherify = getVoucherify()
   const vouchers = order.vouchers_applied?.map((voucher) => ({
     id: voucher.code,
     object: 'voucher' as const,

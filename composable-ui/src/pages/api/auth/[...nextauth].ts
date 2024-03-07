@@ -1,12 +1,11 @@
 import { randomUUID } from 'crypto'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import GoogleProvider from 'next-auth/providers/google'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getCRSFCookieInfo } from 'server/auth-utils'
 import { getCustomer, upsertCustomer } from '@composable/voucherify'
 import { Analytics } from '@segment/analytics-node'
-import { voucherify } from '@composable/voucherify/src/voucherify-config'
+import dayjs from 'dayjs'
 
 const getAnalitics = () => {
   if (!process.env.SEGMENTIO_SOURCE_WRITE_KEY) {
@@ -55,11 +54,12 @@ export const rawAuthOptions: NextAuthOptions = {
             source_id: credentials.phone,
             email: undefined,
             registeredCustomer: false,
-            registrationDate: '2024-03-07',
+            registrationDate: dayjs().format('YYYY-MM-DD'),
             phone: credentials.phone,
             name: undefined,
           }
 
+          // Integration between segment and Voucherify creates the customer in Voucherify base on this event
           const analytics = getAnalitics()
           analytics.identify({
             userId: credentials.phone,
@@ -73,7 +73,6 @@ export const rawAuthOptions: NextAuthOptions = {
           return null
         }
 
-        // TODO send event to segment
         const customer = {
           id: voucherifyCustomer.id,
           voucherifyId: voucherifyCustomer.id,

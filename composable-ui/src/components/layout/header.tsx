@@ -17,6 +17,7 @@ import { useRouter } from 'next/router'
 import { MenuItem } from 'components/menu/menu-item'
 import NextLink from 'next/link'
 import { Heading } from '@chakra-ui/react'
+import { Localisation } from 'components/pos/localisation'
 
 export const Header = () => {
   const { cart } = useCart()
@@ -29,7 +30,7 @@ export const Header = () => {
     <Box as="header" borderBottomWidth="1px" height={'4rem'}>
       <Container maxW="container.2xl">
         <Grid
-          templateColumns={'repeat(3, 1fr)'}
+          templateColumns={'2fr 2fr 1fr'}
           justifyContent={'center'}
           height={'4rem'}
         >
@@ -61,12 +62,12 @@ export const Header = () => {
               </Heading>
             </Link>
           </Flex>
-          {/* <Box
+          <Box
             as="nav"
             display={{ base: 'none', md: 'flex' }}
             justifyContent="center"
           >
-            {cmsNavLinks.map((el) => {
+            {/* {cmsNavLinks.map((el) => {
               return (
                 <MenuItem
                   label={el.name}
@@ -78,15 +79,16 @@ export const Header = () => {
                   }}
                 />
               )
-            })}
-          </Box> */}
-          {/* <Box
+            })} */}
+          </Box>
+          <Box
             display="flex"
             alignItems={'center'}
             justifyContent="flex-end"
             gap={3}
+            // maxW={200}
           >
-            <Box display={{ base: 'none', md: 'flex' }}>
+            {/* <Box display={{ base: 'none', md: 'flex' }}>
               <LoginAction />
             </Box>
             <Button
@@ -100,8 +102,10 @@ export const Header = () => {
               onClick={() => cartDrawer.onOpen()}
             >
               <CartIcon cartQuantity={cart.quantity} />
-            </Button>
-          </Box> */}
+            </Button> */}
+
+            <Localisation />
+          </Box>
         </Grid>
       </Container>
     </Box>

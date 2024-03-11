@@ -17,7 +17,7 @@ export const getVoucherify = (): ReturnType<typeof VoucherifyServerSide> => {
       secretKey: process.env.VOUCHERIFY_SECRET_KEY,
       exposeErrorCause: true,
       apiUrl: process.env.VOUCHERIFY_API_URL,
-      channel: 'ComposableUI',
+      channel: process.env.NAME || `POS`,
     })
   }
   return voucherifyInstance

@@ -9,6 +9,7 @@ export const addVoucher: CommerceService['addVoucher'] = async ({
   cartId,
   code,
   user,
+  localisation,
 }) => {
   const cart = await getCartFromStorage(cartId)
 
@@ -22,7 +23,7 @@ export const addVoucher: CommerceService['addVoucher'] = async ({
     cart: cartWithDiscount,
     errorMessage,
     success,
-  } = await addVoucherToCart(cart, code, user)
+  } = await addVoucherToCart(cart, code, user, localisation)
 
   if (success) {
     await saveCart(cartWithDiscount)

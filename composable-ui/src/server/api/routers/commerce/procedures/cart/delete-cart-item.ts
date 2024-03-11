@@ -13,5 +13,9 @@ export const deleteCartItem = protectedProcedure
     const user = ctx.session.user.sourceId
       ? { sourceId: ctx.session.user.sourceId }
       : undefined
-    return await commerce.deleteCartItem({ ...input, user })
+    return await commerce.deleteCartItem({
+      ...input,
+      user,
+      localisation: ctx.session.localisation,
+    })
   })

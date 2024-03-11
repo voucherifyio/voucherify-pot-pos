@@ -8,6 +8,7 @@ export const deleteVoucher: CommerceService['deleteVoucher'] = async ({
   cartId,
   code,
   user,
+  localisation,
 }) => {
   const cart = await getCartFromStorage(cartId)
 
@@ -20,7 +21,8 @@ export const deleteVoucher: CommerceService['deleteVoucher'] = async ({
   const { cart: cartWithDiscount, success } = await deleteVoucherFromCart(
     cart,
     code,
-    user
+    user,
+    localisation
   )
 
   if (success) {

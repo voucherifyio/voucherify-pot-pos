@@ -35,7 +35,7 @@ export const Customer = () => {
           </Button>
         )}
       </HStack>
-      {loggedAsUser && (
+      {loggedAsUser && session.data && (
         <Box mb={6}>
           <UnorderedList mt={6} mb={8}>
             <ListItem>

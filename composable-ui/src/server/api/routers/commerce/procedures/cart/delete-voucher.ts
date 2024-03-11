@@ -13,5 +13,9 @@ export const deleteVoucher = protectedProcedure
     const user = ctx.session.user.sourceId
       ? { sourceId: ctx.session.user.sourceId }
       : undefined
-    return await commerce.deleteVoucher({ ...input, user })
+    return await commerce.deleteVoucher({
+      ...input,
+      user,
+      localisation: ctx.session.localisation,
+    })
   })

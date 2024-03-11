@@ -10,7 +10,7 @@ import {
   Divider,
 } from '@chakra-ui/react'
 import { useLoyaltyCardsList } from 'hooks/use-loyalty-cards-list'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 
 export interface LoyaltyCardsListProps {
   onClick?: (productId: string) => unknown
@@ -18,6 +18,7 @@ export interface LoyaltyCardsListProps {
 
 export const LoyaltyCardsList = ({ onClick }: LoyaltyCardsListProps) => {
   const { status, loyaltyCardsList } = useLoyaltyCardsList()
+  const session = useSession()
   if (status !== 'success') {
     return <></>
   }
@@ -30,7 +31,11 @@ export const LoyaltyCardsList = ({ onClick }: LoyaltyCardsListProps) => {
           variant="outline"
           size={'sm'}
           onClick={() =>
-            signIn('only-loyalty-card', { redirect: true, code: card.code })
+            signIn('only-loyalty-card', {
+              redirect: true,
+              code: card.code,
+              localisation: session.data?.localisation,
+            })
           }
         >
           {card.code}

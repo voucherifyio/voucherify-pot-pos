@@ -13,3 +13,18 @@ export const orderToVoucherifyOrder = (order: Order): OrdersCreate => {
     })),
   }
 }
+const LOCALISATIONS = ['West Parkland', 'Fas Gas', 'Parkland Calgary']
+
+export const addLocalisationToOrder = (
+  order: OrdersCreate,
+  localisation?: string
+) => {
+  console.log({ localisation })
+  if (!localisation || !LOCALISATIONS.includes(localisation)) {
+    return order
+  }
+  return {
+    ...order,
+    metadata: { ...(order.metadata || {}), location_id: [localisation] },
+  }
+}

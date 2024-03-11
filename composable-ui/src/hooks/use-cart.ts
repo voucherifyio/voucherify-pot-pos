@@ -67,7 +67,7 @@ export const useCart = (options?: UseCartOptions) => {
    * Fetch Cart
    */
   const { data: cart, status } = useQuery(
-    [USE_CART_KEY, cartId, updatedAt],
+    [USE_CART_KEY, cartId, updatedAt, session.data?.localisation],
     async () => {
       const response = await client.commerce.getCart.query({ cartId })
       return response

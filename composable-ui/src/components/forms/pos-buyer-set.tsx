@@ -17,6 +17,7 @@ export const PosBuyerSetdForm = ({
   type = AccountPage.DRAWER,
 }: ForgotPasswordFormProps) => {
   const intl = useIntl()
+  const session = useSession()
   const {
     register,
     handleSubmit,
@@ -53,7 +54,11 @@ export const PosBuyerSetdForm = ({
           role={'form'}
           aria-label={content.title}
           onSubmit={handleSubmit((data) => {
-            signIn('only-phone', { redirect: true, phone: data.phone })
+            signIn('only-phone', {
+              redirect: true,
+              phone: data.phone,
+              localisation: session.data?.localisation,
+            })
           })}
         >
           <HStack spacing={6} alignItems={'stretch'}>

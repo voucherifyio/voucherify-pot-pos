@@ -15,5 +15,9 @@ export const addCartItem = protectedProcedure
     const user = ctx.session.user.sourceId
       ? { sourceId: ctx.session.user.sourceId }
       : undefined
-    return await commerce.addCartItem({ ...input, user })
+    return await commerce.addCartItem({
+      ...input,
+      user,
+      localisation: ctx.session.localisation,
+    })
   })

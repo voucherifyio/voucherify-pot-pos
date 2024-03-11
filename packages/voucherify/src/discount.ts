@@ -3,13 +3,17 @@ import { validateCouponsAndPromotions } from './validate-discounts'
 import { isRedeemableApplicable } from './is-redeemable-applicable'
 import { cartWithDiscount } from './cart-with-discount'
 import { getVoucherify } from './voucherify-config'
-import { orderToVoucherifyOrder } from './order-to-voucherify-order'
+import {
+  orderToVoucherifyOrder,
+  addLocalisationToOrder,
+} from './order-to-voucherify-order'
 import dayjs from 'dayjs'
 
 export const deleteVoucherFromCart = async (
   cart: Cart,
   code: string,
-  user?: UserSession
+  user?: UserSession,
+  localisation?: string
 ): Promise<{ cart: Cart; success: boolean; errorMessage?: string }> => {
   const cartAfterDeletion: Cart = {
     ...cart,
@@ -17,7 +21,11 @@ export const deleteVoucherFromCart = async (
       (voucher) => voucher.code !== code
     ),
   }
-  const updatedCart = await updateCartDiscount(cartAfterDeletion, user)
+  const updatedCart = await updateCartDiscount(
+    cartAfterDeletion,
+    user,
+    localisation
+  )
   return {
     cart: updatedCart,
     success: true,
@@ -26,13 +34,15 @@ export const deleteVoucherFromCart = async (
 
 export const updateCartDiscount = async (
   cart: Cart,
-  user?: UserSession
+  user?: UserSession,
+  localisation?: string
 ): Promise<Cart> => {
   const { validationResult, promotionsResult } =
     await validateCouponsAndPromotions({
       cart,
       voucherify: getVoucherify(),
       user,
+      localisation,
     })
   return cartWithDiscount(cart, validationResult, promotionsResult)
 }
@@ -40,7 +50,8 @@ export const updateCartDiscount = async (
 export const addVoucherToCart = async (
   cart: Cart,
   code: string,
-  user?: UserSession
+  user?: UserSession,
+  localisation?: string
 ): Promise<{ cart: Cart; success: boolean; errorMessage?: string }> => {
   if (cart.vouchersApplied?.some((voucher) => voucher.code === code)) {
     return {
@@ -55,6 +66,7 @@ export const addVoucherToCart = async (
       code,
       voucherify: getVoucherify(),
       user,
+      localisation,
     })
 
   const { isApplicable, error } = isRedeemableApplicable(code, validationResult)
@@ -164,8 +176,16 @@ export const upsertCustomer = async (phone: string) => {
   }
 }
 
-export const orderPaid = async (order: Order, user?: UserSession) => {
-  const voucherifyOrder = orderToVoucherifyOrder(order)
+export const orderPaid = async (
+  order: Order,
+  user?: UserSession,
+  localisation?: string
+) => {
+  const voucherifyOrder = addLocalisationToOrder(
+    orderToVoucherifyOrder(order),
+    localisation
+  )
+  console.log({ voucherifyOrder })
   const voucherify = getVoucherify()
   const vouchers = order.vouchers_applied?.map((voucher) => ({
     id: voucher.code,

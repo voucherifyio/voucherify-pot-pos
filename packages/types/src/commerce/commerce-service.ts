@@ -22,6 +22,7 @@ export interface CommerceService {
     variantId?: string
     quantity: number
     user?: UserSession
+    localisation?: string
   }): Promise<Cart>
 
   createCart(): Promise<Cart>
@@ -30,21 +31,28 @@ export interface CommerceService {
     cartId: string
     productId: string
     user?: UserSession
+    localisation?: string
   }): Promise<Cart>
 
-  getCart(params: { cartId: string; user?: UserSession }): Promise<Cart | null>
+  getCart(params: {
+    cartId: string
+    user?: UserSession
+    localisation?: string
+  }): Promise<Cart | null>
 
   updateCartItem(params: {
     cartId: string
     productId: string
     quantity: number
     user?: UserSession
+    localisation?: string
   }): Promise<Cart>
 
   addVoucher(params: {
     cartId: string
     code: string
     user?: UserSession
+    localisation?: string
   }): Promise<{
     cart: Cart
     success: boolean
@@ -55,6 +63,7 @@ export interface CommerceService {
     cartId: string
     code: string
     user?: UserSession
+    localisation?: string
   }): Promise<Cart>
 
   /**
@@ -86,6 +95,7 @@ export interface CommerceService {
   createOrder(params: {
     checkout: CheckoutInput
     user?: UserSession
+    localisation?: string
   }): Promise<Order | null>
 
   getOrder(params: { orderId: string }): Promise<Order | null>

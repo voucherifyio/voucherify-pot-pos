@@ -12,6 +12,7 @@ export const addCartItem: CommerceService['addCartItem'] = async ({
   productId,
   quantity,
   user,
+  localisation,
 }) => {
   const cart = (await getCart(cartId)) || generateEmptyCart(cartId)
 
@@ -28,6 +29,6 @@ export const addCartItem: CommerceService['addCartItem'] = async ({
 
   cart.summary = calculateCartSummary(cart.items)
 
-  const cartWithDiscount = await updateCartDiscount(cart, user)
+  const cartWithDiscount = await updateCartDiscount(cart, user, localisation)
   return saveCart(cartWithDiscount)
 }

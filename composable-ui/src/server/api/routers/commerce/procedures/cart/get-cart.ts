@@ -8,5 +8,9 @@ export const getCart = protectedProcedure
     const user = ctx.session.user.sourceId
       ? { sourceId: ctx.session.user.sourceId }
       : undefined
-    return await commerce.getCart({ ...input, user })
+    return await commerce.getCart({
+      ...input,
+      user,
+      localisation: ctx.session.localisation,
+    })
   })

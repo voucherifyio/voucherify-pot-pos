@@ -1,6 +1,4 @@
 import { FormatNumberOptions, useIntl } from 'react-intl'
-import { useRouter } from 'next/router'
-import { NextSeo } from 'next-seo'
 import {
   Alert,
   AlertDescription,
@@ -9,7 +7,6 @@ import {
   Box,
   Button,
   Container,
-  Divider,
   Flex,
   Grid,
   GridItem,
@@ -24,11 +21,11 @@ import { HorizontalProductCardEditablePos } from '@composable/ui'
 import { CartSummary } from './cart'
 import { ProductsList } from './pos/products-list'
 import { Customer } from './pos/customer'
+import { CustomerRedeemable } from './pos/customer-redeemables'
 import { useState } from 'react'
 import { LoyaltyCardsList } from './pos/loyalty-cards-list'
 
 export const PosPage = () => {
-  const router = useRouter()
   const intl = useIntl()
   const [orderAdded, setOrderAdded] = useState(false)
   const { placeOrder } = usePosCheckout()
@@ -226,6 +223,7 @@ export const PosPage = () => {
             Scan loyalty card
           </Text>
           <LoyaltyCardsList />
+          <CustomerRedeemable />
         </GridItem>
       </Grid>
     </Container>

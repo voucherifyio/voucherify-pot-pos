@@ -10,7 +10,11 @@ import {
   SitemapField,
   LoyaltyCard,
 } from './index'
-
+type Redeemable = {
+  id: string
+  object: 'campaign' | 'voucher' | 'promotion_tier' | 'promotion_stack'
+  campaign_name?: string
+}
 export interface CommerceService {
   /**
    * Cart methods
@@ -116,4 +120,10 @@ export interface CommerceService {
   resetPassword(params: { email: string }): Promise<void>
 
   getLoyaltyCardsList(): Promise<LoyaltyCard[]>
+
+  getCustomerRedeemables(params: {
+    user?: UserSession
+    cartId: string
+    localisation?: string
+  }): Promise<Redeemable[]>
 }

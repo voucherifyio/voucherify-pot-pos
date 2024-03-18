@@ -8,6 +8,7 @@ import {
   addLocalisationToOrder,
 } from './order-to-voucherify-order'
 import dayjs from 'dayjs'
+import { cartToVoucherifyOrder } from './cart-to-voucherify-order'
 
 export const deleteVoucherFromCart = async (
   cart: Cart,
@@ -143,6 +144,32 @@ export const getLoyaltyCardsList = async () => {
       { limit: 100 }
     )
     return membersResponse.vouchers
+  } catch (e) {
+    return []
+  }
+}
+
+export const getCustomerRedeemables = async (props: {
+  cart: Cart
+  customerId: string
+  localisation?: string
+}) => {
+  const { cart, customerId, localisation } = props
+  const order = addLocalisationToOrder(
+    cartToVoucherifyOrder(cart),
+    localisation
+  )
+  try {
+    const voucherify = getVoucherify()
+    console.log('redeemables order', order)
+    const qualificationResponse =
+      await voucherify.qualifications.checkEligibility({
+        order,
+        scenario: 'CUSTOMER_WALLET',
+        customer: { source_id: customerId },
+        options: { expand: ['redeemable'] },
+      })
+    return qualificationResponse.redeemables.data
   } catch (e) {
     return []
   }

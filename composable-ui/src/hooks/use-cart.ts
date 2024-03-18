@@ -44,6 +44,7 @@ interface UseCartOptions {
     data: {
       cart: Cart
       success: boolean
+      errorMessage?: string | undefined
     },
     variables: {
       cartId: string

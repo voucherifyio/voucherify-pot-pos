@@ -9,6 +9,7 @@ import {
 } from './order-to-voucherify-order'
 import dayjs from 'dayjs'
 import { cartToVoucherifyOrder } from './cart-to-voucherify-order'
+import { OrderCalculated, OrdersCreateResponse } from '@voucherify/sdk'
 
 export const deleteVoucherFromCart = async (
   cart: Cart,
@@ -148,6 +149,79 @@ export const getLoyaltyCardsList = async () => {
     return []
   }
 }
+export type RedemptionsDetail = {
+  redemptionId: string
+  name: string
+  discount?: number
+}
+export type VoucherifyOrder = OrderCalculated & {
+  redemptionsDetails: RedemptionsDetail[]
+}
+export const getOrder = async (voucherifyOrderId: string) => {
+  try {
+    const voucherify = getVoucherify()
+    const order = (await voucherify.orders.get(
+      voucherifyOrderId
+    )) as OrderCalculated
+
+    const redemptionsDetails = (
+      await Promise.all(
+        Object.keys(order.redemptions || {}).map((redemptionId) =>
+          voucherify.redemptions.get(redemptionId)
+        )
+      )
+    ).map(async (redemption) => {
+      console.log(redemption)
+
+      if (redemption.voucher && redemption.order) {
+        return {
+          redemptionId: redemption.id,
+          name: [redemption.voucher.campaign, redemption.voucher.code]
+            .filter((e) => e)
+            .join(' | '),
+          discount: redemption.order.total_discount_amount,
+        } as RedemptionsDetail
+      }
+
+      //@ts-ignore
+      if (redemption.promotion_tier && redemption.order) {
+        //@ts-ignore
+
+        try {
+          //@ts-ignore
+          const tier = await voucherify.promotions.tiers.get(
+            redemption.promotion_tier.id
+          )
+          console.log({ tier })
+          return {
+            redemptionId: redemption.id,
+            //@ts-ignore
+            name: `${tier.name}`,
+            discount: redemption.order.total_discount_amount,
+          } as RedemptionsDetail
+        } catch (e) {
+          return {
+            redemptionId: redemption.id,
+            //@ts-ignore
+            name: `${redemption.promotion_tier.id} (deleted)`,
+            discount: redemption.order.total_discount_amount,
+          } as RedemptionsDetail
+        }
+      }
+
+      return false
+    })
+
+    return {
+      ...order,
+      redemptionsDetails: (await Promise.all(redemptionsDetails)).filter(
+        (e) => e
+      ),
+    }
+  } catch (e) {
+    return null
+  }
+}
 
 export const getCustomerRedeemables = async (props: {
   cart: Cart
@@ -225,17 +299,19 @@ export const orderPaid = async (
   const customer = user?.sourceId ? { source_id: user.sourceId } : undefined
   const redeemables = [...(vouchers || []), ...(promotions || [])]
   if (redeemables.length) {
-    return await voucherify.redemptions.redeemStackable({
+    const redeemResult = await voucherify.redemptions.redeemStackable({
       redeemables,
       order: voucherifyOrder,
       options: { expand: ['order'] },
       customer,
     })
+    return redeemResult.order?.id
   } else {
-    return await voucherify.orders.create({
+    const orderResult = await voucherify.orders.create({
       ...voucherifyOrder,
       status: 'PAID',
       customer,
     })
+    return orderResult.id
   }
 }

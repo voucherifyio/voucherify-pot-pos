@@ -54,7 +54,7 @@ export const createOrder: CommerceService['createOrder'] = async ({
     In this situation, the ‘payment’ property is always set as 'unpaid' (in 'generateOrderFromCart'),
     so to simulate the correct behavior, the ‘payment’ value was changed here to 'paid' and the ‘orderPaid’ function was called to trigger the redemptions process.*/
   updatedOrder.payment = 'paid'
-  await orderPaid(updatedOrder, user, localisation)
+  const voucherifyOrderId = await orderPaid(updatedOrder, user, localisation)
 
-  return await saveOrder(updatedOrder)
+  return { ...(await saveOrder(updatedOrder)), voucherifyOrderId }
 }

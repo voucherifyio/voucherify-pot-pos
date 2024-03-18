@@ -17,6 +17,7 @@ export interface Order {
   summary: Cart['summary']
   vouchers_applied: Voucher[]
   promotions_applied: Promotion[]
+  voucherifyOrderId?: string
 }
 
 export interface Address {

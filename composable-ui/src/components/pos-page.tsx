@@ -24,12 +24,14 @@ import { Customer } from './pos/customer'
 import { CustomerRedeemable } from './pos/customer-redeemables'
 import { useState } from 'react'
 import { LoyaltyCardsList } from './pos/loyalty-cards-list'
+import { Order } from '@composable/types'
+import { useRouter } from 'next/router'
 
 export const PosPage = () => {
   const intl = useIntl()
-  const [orderAdded, setOrderAdded] = useState(false)
-  const { placeOrder } = usePosCheckout()
+  const [orderAdded, setOrderAdded] = useState<Order | undefined>()
   const toast = useToast()
+  const router = useRouter()
   const { cart, updateCartItem, deleteCartItem, addCartItem, deleteCart } =
     useCart({
       onCartItemUpdateError: () => {
@@ -45,6 +47,18 @@ export const PosPage = () => {
         })
       },
     })
+  const { placeOrder, order } = usePosCheckout({
+    onPlaceOrderSuccess: async (order: Order | undefined) => {
+      if (order) {
+        await deleteCart()
+        await signOut({ redirect: false })
+        // setOrderAdded(undefined)
+        router.push(`/order/${order.voucherifyOrderId}`)
+      } else {
+        setOrderAdded(order)
+      }
+    },
+  })
 
   const { isLoading, isEmpty, quantity } = cart
   const title = intl.formatMessage({ id: 'cart.title' })
@@ -69,18 +83,13 @@ export const PosPage = () => {
   }
 
   const paidByCash = async () => {
-    const a = await placeOrder()
-
-    setOrderAdded(true)
-
-    // todo display messgae?
+    await placeOrder()
   }
+
   const nextOrder = async () => {
     await deleteCart()
-    console.log('aaa')
     await signOut({ redirect: false })
-    console.log('aaa2')
-    setOrderAdded(false)
+    setOrderAdded(undefined)
   }
 
   if (orderAdded) {
@@ -99,8 +108,9 @@ export const PosPage = () => {
           <AlertTitle mt={4} mb={1} fontSize="lg">
             Order paid!
           </AlertTitle>
-          <AlertDescription maxWidth="sm">
-            Customer Farewell Instruction Guide here.
+          <AlertDescription mb={2}>
+            Order id: {orderAdded.id}, Voucherify order id:{' '}
+            {orderAdded.voucherifyOrderId}
           </AlertDescription>
           <Button onClick={nextOrder}>Next order</Button>
         </Alert>

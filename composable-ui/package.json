@@ -37,6 +37,7 @@
     "@trpc/next": "10.9.0",
     "@trpc/react-query": "10.9.0",
     "@trpc/server": "10.9.0",
+    "@voucherify/sdk": "2.7.1",
     "algoliasearch": "^4.14.3",
     "dayjs": "^1.11.10",
     "focus-visible": "^5.2.0",

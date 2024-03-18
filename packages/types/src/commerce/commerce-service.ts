@@ -10,6 +10,94 @@ import {
   SitemapField,
   LoyaltyCard,
 } from './index'
+
+type VoucherifyOrder = {
+  id?: string
+  source_id?: string | null
+  created_at?: string
+  updated_at?: string | null
+  status?: 'CREATED' | 'PAID' | 'CANCELED' | 'FULFILLED'
+  amount?: number
+  initial_amount?: number
+  discount_amount?: number
+  items_discount_amount?: number
+  total_discount_amount?: number
+  total_amount?: number
+  applied_discount_amount?: number
+  items_applied_discount_amount?: number
+  total_applied_discount_amount?: number
+  items?: VoucherifyOrdersItem[]
+  metadata: Record<string, unknown>
+  customer?: VoucherifyCustomer
+  customer_id: string | null
+  // referrer?: ReferrerId | ReferrerWithSummaryLoyaltyReferrals;
+  referrer_id: string | null
+  object: 'order'
+  redemptions?: Record<string, OrderRedemptions>
+}
+type OrderRedemptions = {
+  date?: string
+  rollback_id?: string
+  rollback_date?: string
+  related_object_type?: string
+  related_object_id?: string
+  related_object_parent_id?: string
+  stacked?: string[]
+  rollback_stacked?: string[]
+}
+type VoucherifyOrdersItem = {
+  sku_id?: string
+  product_id?: string
+  related_object?: 'product' | 'sku'
+  source_id?: string
+  quantity?: number
+  discount_quantity?: number
+  initial_quantity?: number
+  amount?: number
+  discount_amount?: number
+  initial_amount?: number
+  total_applied_discount_amount?: number
+  price?: number
+  subtotal_amount?: number
+  product?: {
+    id?: string
+    source_id?: string
+    override?: boolean
+    name?: string
+    metadata?: Record<string, any>
+    price?: number
+  }
+  sku?: {
+    id?: string
+    source_id?: string
+    override?: boolean
+    sku?: string
+    price?: number
+  }
+  object: 'order_item'
+  metadata?: Record<string, any>
+}
+
+type VoucherifyCustomer = {
+  id?: string
+  source_id?: string
+  name?: string
+  description?: string
+  email?: string
+  phone?: string
+  birthday?: string
+  birthdate?: string
+  address?: {
+    city?: string
+    state?: string
+    line_1?: string
+    line_2?: string
+    country?: string
+    postal_code?: string
+  }
+  metadata?: Record<string, any>
+}
+
 type Redeemable = {
   id: string
   object: 'campaign' | 'voucher' | 'promotion_tier' | 'promotion_stack'
@@ -103,6 +191,10 @@ export interface CommerceService {
   }): Promise<Order | null>
 
   getOrder(params: { orderId: string }): Promise<Order | null>
+
+  getVoucherifyOrder(params: {
+    voucherifyOrderId: string
+  }): Promise<VoucherifyOrder | null>
 
   getShippingMethods(): Promise<ShippingMethod[] | null>
 

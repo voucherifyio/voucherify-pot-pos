@@ -188,8 +188,8 @@ export const getOrder = async (voucherifyOrderId: string) => {
         //@ts-ignore
 
         try {
-          //@ts-ignore
           const tier = await voucherify.promotions.tiers.get(
+            //@ts-ignore
             redemption.promotion_tier.id
           )
           console.log({ tier })

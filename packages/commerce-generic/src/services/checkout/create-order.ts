@@ -4,6 +4,15 @@ import { getCart } from '../../data/mock-storage'
 import { saveOrder } from '../../data/mock-storage'
 import shippingMethods from '../../data/shipping-methods.json'
 import { randomUUID } from 'crypto'
+import { Analytics } from '@segment/analytics-node'
+
+const getAnalitics = () => {
+  if (!process.env.SEGMENTIO_SOURCE_WRITE_KEY) {
+    throw new Error('SEGMENTIO_SOURCE_WRITE_KEY not defined in env variables')
+  }
+
+  return new Analytics({ writeKey: process.env.SEGMENTIO_SOURCE_WRITE_KEY })
+}
 
 const generateOrderFromCart = (
   cart: Cart,
@@ -56,5 +65,16 @@ export const createOrder: CommerceService['createOrder'] = async ({
   updatedOrder.payment = 'paid'
   const voucherifyOrderId = await orderPaid(updatedOrder, user, localisation)
 
+  if (user) {
+    const analytics = getAnalitics()
+    analytics.track({
+      userId: user.sourceId,
+      event: 'Order placed',
+      properties: {
+        voucherifyOrderId,
+        localisation,
+      },
+    })
+  }
   return { ...(await saveOrder(updatedOrder)), voucherifyOrderId }
 }

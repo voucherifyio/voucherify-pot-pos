@@ -10,6 +10,7 @@ import {
 import { HorizontalProductCardEditablePosProps } from './horizontal-product-card-editable-pos'
 
 export { HorizontalProductCardEditablePos } from './horizontal-product-card-editable-pos'
+export { HorizontalProductCardEditablePomp } from './horizontal-product-card-editable-pomp'
 
 export type HorizontalProductCardProps = (
   | HorizontalProductCardEditablePosProps

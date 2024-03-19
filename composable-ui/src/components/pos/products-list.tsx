@@ -12,18 +12,32 @@ import {
 
 export interface ProductsProps {
   onClick?: (productId: string) => unknown
+  filterProductsByName?: string[]
+  filterProductsOutByName?: string[]
 }
 
-export const ProductsList = ({ onClick }: ProductsProps) => {
+export const ProductsList = ({
+  onClick,
+  filterProductsByName,
+  filterProductsOutByName,
+}: ProductsProps) => {
+  const produuctsToList = filterProductsByName
+    ? products.filter((product) => filterProductsByName.includes(product.name))
+    : filterProductsOutByName
+    ? products.filter(
+        (product) => !filterProductsOutByName.includes(product.name)
+      )
+    : products
   return (
     <SimpleGrid minChildWidth="120px" spacing={2}>
-      {products
+      {produuctsToList
         .sort((p1, p2) => p1.type.localeCompare(p2.type))
         .map((product) => (
           <Card
             _hover={{ bg: 'lightgray' }}
             size={'sm'}
             cursor={'pointer'}
+            maxW={120}
             onClick={() => onClick?.(product.id)}
             key={product.id}
           >

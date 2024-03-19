@@ -23,14 +23,18 @@ export const Header = () => {
   const { cart } = useCart()
   const { cartDrawer, menuDrawer } = useComposable()
   const {
+    pathname,
+    basePath,
     query: { slug },
   } = useRouter()
+
+  // console.log({basePath, slug, pathname})
 
   return (
     <Box as="header" borderBottomWidth="1px" height={'4rem'}>
       <Container maxW="container.2xl">
         <Grid
-          templateColumns={'2fr 2fr 1fr'}
+          templateColumns={'1fr 2fr 1fr'}
           justifyContent={'center'}
           height={'4rem'}
         >
@@ -58,7 +62,7 @@ export const Header = () => {
             <Link as={NextLink} href="/">
               {/* <Logo h="21px" /> */}
               <Heading as="p" size="sm">
-                POS
+                Voucherify PoT
               </Heading>
             </Link>
           </Flex>
@@ -67,6 +71,22 @@ export const Header = () => {
             display={{ base: 'none', md: 'flex' }}
             justifyContent="center"
           >
+            <MenuItem
+              label="POS"
+              href={`/`}
+              state={'/' === pathname ? 'Active' : 'Default'}
+              rootProps={{
+                height: 'full',
+              }}
+            />
+            <MenuItem
+              label="Ev Kiosk & Pump"
+              href={`/ev-kiosk-and-pomp`}
+              state={'/ev-kiosk-and-pomp' === pathname ? 'Active' : 'Default'}
+              rootProps={{
+                height: 'full',
+              }}
+            />
             {/* {cmsNavLinks.map((el) => {
               return (
                 <MenuItem

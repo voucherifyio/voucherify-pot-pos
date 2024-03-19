@@ -11,6 +11,11 @@ interface UsePosCheckoutOptions {
   onPlaceOrderSuccess?: (order?: Order) => void
 }
 
+type Item = {
+  productId: string
+  quantity: number
+}
+
 export const usePosCheckout = (options?: UsePosCheckoutOptions) => {
   const { client } = api.useContext()
   const { cart } = useCart()
@@ -24,13 +29,31 @@ export const usePosCheckout = (options?: UsePosCheckoutOptions) => {
    */
   const placeOrderMutation = useMutation(
     ['cartCheckout'],
-    async () => {
-      if (!cart?.id) {
+    async (variables: { items?: Item[] }) => {
+      let cartId
+      if (variables.items) {
+        const response = await client.commerce.createCart.mutate()
+        cartId = response.id
+
+        for (const item of variables.items?.filter((item) => item.quantity) ||
+          []) {
+          await client.commerce.addCartItem.mutate({
+            cartId: cartId,
+            productId: item.productId,
+            quantity: Number(item.quantity),
+          })
+        }
+      } else {
+        cartId = cart.id
+      }
+
+      if (!cartId) {
         throw new Error('cart not found')
       }
+
       const response = await client.commerce.createOrder.mutate({
         checkout: {
-          cartId: cart.id,
+          cartId,
           customer: {
             email: '',
           },
@@ -66,9 +89,12 @@ export const usePosCheckout = (options?: UsePosCheckoutOptions) => {
     }
   )
 
-  const placeOrder = useCallback(() => {
-    return placeOrderMutation.mutateAsync()
-  }, [placeOrderMutation])
+  const placeOrder = useCallback(
+    (items?: Item[]) => {
+      return placeOrderMutation.mutateAsync({ items })
+    },
+    [placeOrderMutation]
+  )
 
   return {
     order,

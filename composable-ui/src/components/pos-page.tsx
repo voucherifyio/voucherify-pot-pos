@@ -223,7 +223,10 @@ export const PosPage = () => {
           >
             Scan product
           </Text>
-          <ProductsList onClick={handleAddToCart} />
+          <ProductsList
+            onClick={handleAddToCart}
+            filterProductsOutByName={['Gasoline', 'EV Charging 1 kWh']}
+          />
 
           <Text
             mt={12}

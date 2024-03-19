@@ -183,8 +183,8 @@ export const getOrder = async (voucherifyOrderId: string) => {
         } as RedemptionsDetail
       }
 
-      //@ts-ignore
       if (
+        //@ts-ignore
         redemption.promotion_tier &&
         redemption.order &&
         redemption.order.total_discount_amount

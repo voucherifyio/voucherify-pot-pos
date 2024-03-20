@@ -9,7 +9,12 @@ import {
 } from './order-to-voucherify-order'
 import dayjs from 'dayjs'
 import { cartToVoucherifyOrder } from './cart-to-voucherify-order'
-import { OrderCalculated, OrdersCreateResponse } from '@voucherify/sdk'
+import {
+  LoyaltyCardTransaction,
+  OrderCalculated,
+  OrdersCreate,
+  OrdersCreateResponse,
+} from '@voucherify/sdk'
 
 export const deleteVoucherFromCart = async (
   cart: Cart,
@@ -149,6 +154,52 @@ export const getLoyaltyCardsList = async () => {
     return []
   }
 }
+
+export type VoucherifyOrderListItem = {
+  id: string
+  created_at: string
+  status: string
+  location: string
+  amount: number
+}
+
+export const getOrdersList = async (
+  customerId: string
+): Promise<VoucherifyOrderListItem[]> => {
+  try {
+    const myHeaders = new Headers()
+    myHeaders.append(
+      'X-App-Id',
+      process.env.VOUCHERIFY_APPLICATION_ID as string
+    )
+    myHeaders.append('X-App-Token', process.env.VOUCHERIFY_SECRET_KEY as string)
+    myHeaders.append('Content-Type', 'application/json')
+
+    const raw = ''
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+    }
+    // We use fetch as sdk does not have option to filter by customer 😭
+    const responseObj = await fetch(
+      `${process.env.VOUCHERIFY_API_URL}/v1/orders?limit=100&customer=${customerId}`,
+      requestOptions
+    )
+    const response = await responseObj.json()
+    //@ts-ignore
+    return response.orders.map((order) => ({
+      id: order.id,
+      created_at: order.created_at,
+      status: order.status,
+      location: order?.metadata?.location_id?.[0] || '',
+      amount: order.amount,
+    }))
+  } catch (e) {
+    return []
+  }
+}
+
 export type RedemptionsDetail = {
   redemptionId: string
   name: string
@@ -157,6 +208,119 @@ export type RedemptionsDetail = {
 export type VoucherifyOrder = OrderCalculated & {
   redemptionsDetails: RedemptionsDetail[]
 }
+
+export const returnProductsFromOrder = async (
+  voucherifyOrderId: string,
+  productsIds: string[]
+) => {
+  if (!productsIds.length) {
+    throw new Error(
+      '[returnProductsFromOrder] We expect aty least one defined product to remove from the order'
+    )
+  }
+
+  const voucherify = getVoucherify()
+  const oldOrder = await voucherify.orders.get(voucherifyOrderId)
+  console.log('[returnProductsFromOrder] old order', oldOrder)
+
+  if (!oldOrder.items?.length) {
+    throw new Error(
+      '[returnProductsFromOrder] We expect from order to have at least one item'
+    )
+  }
+
+  const customerId = oldOrder.customer?.id
+  if (!customerId) {
+    throw new Error('[returnProductsFromOrder] Order customer not found')
+  }
+
+  const customer = await voucherify.customers.get(customerId)
+  console.log('[returnProductsFromOrder] customer', customer)
+  if (customer.object !== 'customer') {
+    throw new Error('[returnProductsFromOrder] Customer is unconfirmed')
+  }
+
+  const vouchersResponse = await voucherify.vouchers.list({
+    customer: customer.id,
+    campaign: 'Journie PoT Loyalty Program',
+  })
+  console.log('[returnProductsFromOrder] customer vouchers', vouchersResponse)
+
+  if (vouchersResponse.vouchers.length !== 1) {
+    throw new Error(
+      '[returnProductsFromOrder] Customer should have one "Journie PoT Loyalty Program" card'
+    )
+  }
+
+  const loyaltyMemberId = vouchersResponse.vouchers[0].code
+
+  console.log({ loyaltyMemberId })
+
+  const transactions: LoyaltyCardTransaction[] = []
+
+  let hasMore = false
+  let page = 1
+
+  do {
+    console.log('query page', page)
+    const transactionsPage = await voucherify.loyalties.listCardTransactions(
+      loyaltyMemberId,
+      null,
+      { limit: 100, page }
+    )
+    transactions.push(...transactionsPage.data)
+    // it looks like Voucherify opagination is broken, page param is ignored.
+    //  hasMore = transactionsPage.has_more;
+    //  page++;
+  } while (hasMore)
+
+  const transactionsToAmmend = transactions
+    .filter((t) => t.type === 'POINTS_ACCRUAL')
+    .filter((t) => t.details.order?.id === oldOrder.id)
+
+  if (transactionsToAmmend.length !== 1) {
+    console.log(
+      '[returnProductsFromOrder] Expected one transaction to ammend',
+      transactionsToAmmend
+    )
+    throw new Error(
+      '[returnProductsFromOrder] Expected one transaction to ammend'
+    )
+  }
+  const transactionToAmmend = transactionsToAmmend[0]
+  const pointsToDeduct = transactionToAmmend.details.balance.points
+
+  console.log(
+    '[returnProductsFromOrder] transactionToAmmend',
+    transactionToAmmend
+  )
+  console.log('[returnProductsFromOrder] pointsToDeduct', pointsToDeduct)
+
+  await voucherify.loyalties.addOrRemoveCardBalance(loyaltyMemberId, {
+    points: -pointsToDeduct,
+    expiration_type: 'NON_EXPIRING',
+    reason: `Return products ${productsIds.join(', ')} from order: ${
+      oldOrder.id
+    }`,
+  })
+  await voucherify.orders.update({ id: oldOrder.id, status: 'CANCELED' })
+
+  const items = oldOrder.items.filter(
+    (oldItem) => !productsIds.includes(oldItem.product_id || '')
+  )
+
+  const newOrder: OrdersCreate = {
+    customer: { source_id: customer.source_id },
+    items,
+    metadata: { ...oldOrder.metadata, originOrderId: oldOrder.id },
+    status: 'PAID',
+  }
+  console.log('[returnProductsFromOrder] newOrder', newOrder)
+  return items.length
+    ? ((await voucherify.orders.create(newOrder)) as OrderCalculated)
+    : (oldOrder as OrderCalculated)
+}
+
 export const getOrder = async (voucherifyOrderId: string) => {
   try {
     const voucherify = getVoucherify()
@@ -171,8 +335,6 @@ export const getOrder = async (voucherifyOrderId: string) => {
         )
       )
     ).map(async (redemption) => {
-      console.log(redemption)
-
       if (redemption.voucher && redemption.order) {
         return {
           redemptionId: redemption.id,
@@ -196,7 +358,7 @@ export const getOrder = async (voucherifyOrderId: string) => {
             //@ts-ignore
             redemption.promotion_tier.id
           )
-          console.log({ tier })
+
           return {
             redemptionId: redemption.id,
             //@ts-ignore
@@ -290,7 +452,7 @@ export const orderPaid = async (
     orderToVoucherifyOrder(order),
     localisation
   )
-  console.log({ voucherifyOrder })
+
   const voucherify = getVoucherify()
   const vouchers = order.vouchers_applied?.map((voucher) => ({
     id: voucher.code,

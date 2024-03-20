@@ -11,7 +11,15 @@ import {
   LoyaltyCard,
 } from './index'
 
-type VoucherifyOrder = {
+type VoucherifyOrderListItem = {
+  id: string
+  created_at: string
+  status: string
+  location: string
+  amount: number
+}
+
+export type VoucherifyOrder = {
   id?: string
   source_id?: string | null
   created_at?: string
@@ -196,6 +204,11 @@ export interface CommerceService {
     voucherifyOrderId: string
   }): Promise<VoucherifyOrder | null>
 
+  returnProductsFromOrder(params: {
+    voucherifyOrderId: string
+    productsIds: string[]
+  }): Promise<VoucherifyOrder | null>
+
   getShippingMethods(): Promise<ShippingMethod[] | null>
 
   /**
@@ -212,6 +225,10 @@ export interface CommerceService {
   resetPassword(params: { email: string }): Promise<void>
 
   getLoyaltyCardsList(): Promise<LoyaltyCard[]>
+
+  getOrdersList(params: {
+    user?: UserSession
+  }): Promise<VoucherifyOrderListItem[]>
 
   getCustomerRedeemables(params: {
     user?: UserSession

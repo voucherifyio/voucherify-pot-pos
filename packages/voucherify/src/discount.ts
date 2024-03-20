@@ -405,10 +405,11 @@ export const getCustomerRedeemables = async (props: {
     const qualificationResponse =
       await voucherify.qualifications.checkEligibility({
         order,
-        scenario: 'CUSTOMER_WALLET',
+        scenario: 'AUDIENCE_ONLY',
         customer: { source_id: customerId },
         options: { expand: ['redeemable'] },
       })
+
     return qualificationResponse.redeemables.data
   } catch (e) {
     return []

@@ -73,6 +73,7 @@ export const createOrder: CommerceService['createOrder'] = async ({
       properties: {
         voucherifyOrderId,
         localisation,
+        phone: user.sourceId,
       },
     })
   }

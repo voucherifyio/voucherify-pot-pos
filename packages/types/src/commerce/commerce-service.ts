@@ -204,6 +204,11 @@ export interface CommerceService {
     voucherifyOrderId: string
   }): Promise<VoucherifyOrder | null>
 
+  returnProductsFromOrder(params: {
+    voucherifyOrderId: string
+    productsIds: string[]
+  }): Promise<VoucherifyOrder | null>
+
   getShippingMethods(): Promise<ShippingMethod[] | null>
 
   /**

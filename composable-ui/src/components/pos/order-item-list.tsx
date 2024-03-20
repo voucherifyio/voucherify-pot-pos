@@ -26,9 +26,13 @@ import { useEffect, useState } from 'react'
 
 export interface LoyaltyCardsListProps {
   order: VoucherifyOrder | null | undefined
+  onReturnProducts?: (voucherifyOrderId: string, productsIds: string[]) => any
 }
 
-export const OrderItemList = ({ order }: LoyaltyCardsListProps) => {
+export const OrderItemList = ({
+  order,
+  onReturnProducts,
+}: LoyaltyCardsListProps) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([])
 
   useEffect(() => {
@@ -36,7 +40,10 @@ export const OrderItemList = ({ order }: LoyaltyCardsListProps) => {
   }, [order])
 
   const onReturn = () => {
-    console.log('products to return', { selectedItems, orderId: order?.id })
+    if (!order?.id) {
+      return
+    }
+    onReturnProducts?.(order.id, selectedItems)
   }
   if (!order) {
     return null

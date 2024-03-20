@@ -32,7 +32,19 @@ import dayjs from 'dayjs'
 
 export const ReturnProductsPage = () => {
   const [orderId, setOrderId] = useState<string | null>()
-  const { order, status: orderFetchStatus } = useOrder(orderId)
+  const {
+    order,
+    status: orderFetchStatus,
+    returnProductsFromOrderMutation,
+  } = useOrder(orderId, {
+    onReturnProductsFromOrderMutationSuccess: () => window.location.reload(),
+  })
+  const onReturnProducts = (
+    voucherifyOrderId: string,
+    productsIds: string[]
+  ) => {
+    returnProductsFromOrderMutation({ voucherifyOrderId, productsIds })
+  }
   return (
     <Container maxW="container.2xl" py={{ base: '4', md: '8' }}>
       <Grid templateColumns="repeat(2, 1fr)" gap={'md'}>
@@ -78,7 +90,10 @@ export const ReturnProductsPage = () => {
                   </Tbody>
                 </Table>
               </TableContainer>
-              <OrderItemList order={order} />
+              <OrderItemList
+                onReturnProducts={onReturnProducts}
+                order={order}
+              />
             </>
           )}
         </GridItem>

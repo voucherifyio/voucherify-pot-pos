@@ -87,6 +87,14 @@ export const Header = () => {
                 height: 'full',
               }}
             />
+            <MenuItem
+              label="Return Products"
+              href={`/return-products`}
+              state={'/return-products' === pathname ? 'Active' : 'Default'}
+              rootProps={{
+                height: 'full',
+              }}
+            />
             {/* {cmsNavLinks.map((el) => {
               return (
                 <MenuItem

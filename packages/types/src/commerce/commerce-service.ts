@@ -212,6 +212,7 @@ export interface CommerceService {
   resetPassword(params: { email: string }): Promise<void>
 
   getLoyaltyCardsList(): Promise<LoyaltyCard[]>
+  getOrdersList(): Promise<string[]>
 
   getCustomerRedeemables(params: {
     user?: UserSession

@@ -149,6 +149,17 @@ export const getLoyaltyCardsList = async () => {
     return []
   }
 }
+
+export const getOrdersList = async () => {
+  try {
+    const voucherify = getVoucherify()
+    const membersResponse = await voucherify.orders.list()
+    return membersResponse.orders
+  } catch (e) {
+    return []
+  }
+}
+
 export type RedemptionsDetail = {
   redemptionId: string
   name: string

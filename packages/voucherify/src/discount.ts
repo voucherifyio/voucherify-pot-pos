@@ -150,11 +150,46 @@ export const getLoyaltyCardsList = async () => {
   }
 }
 
-export const getOrdersList = async () => {
+export type VoucherifyOrderListItem = {
+  id: string
+  created_at: string
+  status: string
+  location: string
+  amount: number
+}
+
+export const getOrdersList = async (
+  customerId: string
+): Promise<VoucherifyOrderListItem[]> => {
   try {
-    const voucherify = getVoucherify()
-    const membersResponse = await voucherify.orders.list()
-    return membersResponse.orders
+    const myHeaders = new Headers()
+    myHeaders.append(
+      'X-App-Id',
+      process.env.VOUCHERIFY_APPLICATION_ID as string
+    )
+    myHeaders.append('X-App-Token', process.env.VOUCHERIFY_SECRET_KEY as string)
+    myHeaders.append('Content-Type', 'application/json')
+
+    const raw = ''
+
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+    }
+    // We use fetch as sdk does not have option to filter by customer 😭
+    const responseObj = await fetch(
+      `${process.env.VOUCHERIFY_API_URL}/v1/orders?limit=100&customer=${customerId}`,
+      requestOptions
+    )
+    const response = await responseObj.json()
+    //@ts-ignore
+    return response.orders.map((order) => ({
+      id: order.id,
+      created_at: order.created_at,
+      status: order.status,
+      location: order?.metadata?.location_id?.[0] || '',
+      amount: order.amount,
+    }))
   } catch (e) {
     return []
   }

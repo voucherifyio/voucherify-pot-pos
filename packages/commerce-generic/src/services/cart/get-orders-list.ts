@@ -1,7 +1,19 @@
 import { CommerceService } from '@composable/types'
 import { getCart as getCartFromStorage } from '../../data/mock-storage'
-import { getOrdersList as getOrdersListClient } from '@composable/voucherify'
+import {
+  getOrdersList as getOrdersListClient,
+  getCustomer,
+} from '@composable/voucherify'
 
-export const getOrdersList: CommerceService['getOrdersList'] = async () => {
-  return (await getOrdersListClient()).map((order) => order.id)
+export const getOrdersList: CommerceService['getOrdersList'] = async ({
+  user,
+}) => {
+  if (!user) {
+    return []
+  }
+  const voucherifyCustomer = await getCustomer(user.sourceId)
+  if (!voucherifyCustomer) {
+    return []
+  }
+  return getOrdersListClient(voucherifyCustomer.id)
 }

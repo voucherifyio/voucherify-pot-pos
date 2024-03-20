@@ -12,41 +12,77 @@ import {
   GridItem,
   Text,
   useBreakpointValue,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
 } from '@chakra-ui/react'
-import { signOut } from 'next-auth/react'
-import products from '@composable/commerce-generic/src/data/products.json'
 
-import { APP_CONFIG } from '../utils/constants'
-import { useCart, usePosCheckout, useToast } from 'hooks'
-import { HorizontalProductCardEditablePomp } from '@composable/ui'
-import { CartSummaryPomp } from './cart'
-import { ProductsList } from './pos/products-list'
 import { Customer } from './pos/customer'
 import { OrdersList } from './pos/orders-list'
-import { useEffect, useState } from 'react'
-import { LoyaltyCardsList } from './pos/loyalty-cards-list'
-import { Order } from '@composable/types'
-import { useRouter } from 'next/router'
+import { useOrder } from 'hooks/use-order'
+import { useState } from 'react'
+import { OrderItemList } from './pos/order-item-list'
+import dayjs from 'dayjs'
 
 export const ReturnProductsPage = () => {
+  const [orderId, setOrderId] = useState<string | null>()
+  const { order, status: orderFetchStatus } = useOrder(orderId)
   return (
     <Container maxW="container.2xl" py={{ base: '4', md: '8' }}>
-      <Customer />
-      <Text
-        textStyle={{ base: 'Mobile/L', md: 'Desktop/L' }}
-        color={'shading.700'}
-      >
-        Orders
-      </Text>
-      <OrdersList />
-      <Text
-        textStyle={{ base: 'Mobile/L', md: 'Desktop/L' }}
-        color={'shading.700'}
-      >
-        Products
-      </Text>
+      <Grid templateColumns="repeat(2, 1fr)" gap={'md'}>
+        <GridItem w="100%">
+          <Customer />
+          <Text
+            textStyle={{ base: 'Mobile/L', md: 'Desktop/L' }}
+            color={'shading.700'}
+          >
+            Orders
+          </Text>
+          <OrdersList onClick={(orderId) => setOrderId(orderId)} />
+        </GridItem>
+        <GridItem>
+          <Text
+            textStyle={{ base: 'Mobile/L', md: 'Desktop/L' }}
+            color={'shading.700'}
+          >
+            Products
+          </Text>
 
-      <Button>Return selected products</Button>
+          {order && orderFetchStatus === 'success' && (
+            <>
+              <TableContainer maxWidth={400}>
+                <Table size={'sm'}>
+                  <Tbody>
+                    <Tr>
+                      <Td>Created at</Td>
+                      <Td>
+                        {dayjs(order.created_at).format('YYYY-MM-DD HH:MM')}
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Status</Td>
+                      <Td color={order.status === 'PAID' ? 'green' : 'gold'}>
+                        {order.status}
+                      </Td>
+                    </Tr>
+                    <Tr>
+                      <Td>Order id</Td>
+                      <Td>{order.id}</Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              </TableContainer>
+              <OrderItemList order={order} />
+            </>
+          )}
+        </GridItem>
+      </Grid>
     </Container>
   )
 }

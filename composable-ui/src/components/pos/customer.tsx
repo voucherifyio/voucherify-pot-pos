@@ -5,6 +5,15 @@ import {
   Text,
   ListItem,
   UnorderedList,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
 } from '@chakra-ui/react'
 import { useSession, signIn, signOut } from 'next-auth/react'
 
@@ -29,34 +38,46 @@ export const Customer = () => {
             onClick={() => signOut()}
             rightIcon={<CloseIcon />}
             colorScheme="teal"
-            variant="outline"
+            variant="ghost"
           >
             Remove
           </Button>
         )}
       </HStack>
       {loggedAsUser && session.data && (
-        <Box mb={6}>
-          <UnorderedList mt={6} mb={8}>
-            <ListItem>
-              <b>Phone number:</b> {session.data.user?.phoneNumber}
-            </ListItem>
-            {session.data.user?.name && (
-              <ListItem>
-                <b>Name:</b> {session.data.user?.name}
-              </ListItem>
-            )}
-            <ListItem>
-              <b>Registered customer:</b>{' '}
-              {session.data.user?.registeredCustomer ? 'Yes' : 'No'}
-            </ListItem>
-            {session.data.user?.registrationDate && (
-              <ListItem>
-                <b>Registration date:</b> {session.data.user?.registrationDate}
-              </ListItem>
-            )}
-          </UnorderedList>
-        </Box>
+        <TableContainer mt={6} mb={6} maxWidth={400}>
+          <Table size={'sm'}>
+            <Tbody>
+              <Tr>
+                <Td>Phone number</Td>
+                <Td>{session.data.user?.phoneNumber}</Td>
+              </Tr>
+              {session.data.user?.name && (
+                <Tr>
+                  <Td>User name</Td>
+                  <Td>{session.data.user?.name}</Td>
+                </Tr>
+              )}
+              <Tr>
+                <Td>Registered</Td>
+                <Td
+                  color={
+                    session.data.user?.registeredCustomer ? 'green' : 'red'
+                  }
+                >
+                  {' '}
+                  {session.data.user?.registeredCustomer ? 'Yes' : 'No'}
+                </Td>
+              </Tr>
+              {session.data.user?.registrationDate && (
+                <Tr>
+                  <Td>Registration date:</Td>
+                  <Td> {session.data.user?.registrationDate}</Td>
+                </Tr>
+              )}
+            </Tbody>
+          </Table>
+        </TableContainer>
       )}
 
       {!loggedAsUser && <PosBuyerSetdForm />}

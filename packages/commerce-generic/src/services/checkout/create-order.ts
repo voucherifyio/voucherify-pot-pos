@@ -76,6 +76,28 @@ export const createOrder: CommerceService['createOrder'] = async ({
         phone: user.sourceId,
       },
     })
+    const evChargingItem = updatedOrder.items.find(
+      (item) => item.id === 'EV Charging'
+    )
+    const evChargeAmount = evChargingItem
+      ? (evChargingItem.price + evChargingItem.tax) * evChargingItem.quantity
+      : 0
+
+    const isEvChargedForOver30Dollars = evChargeAmount > 30
+
+    if (isEvChargedForOver30Dollars) {
+      analytics.track({
+        userId: user.sourceId,
+        event: 'Ev Charged For Over 30 Dollars',
+        properties: {
+          voucherifyOrderId,
+          localisation,
+          phone: user.sourceId,
+          evChargeAmount,
+          evChargeKwh: evChargingItem?.quantity,
+        },
+      })
+    }
   }
   return { ...(await saveOrder(updatedOrder)), voucherifyOrderId }
 }

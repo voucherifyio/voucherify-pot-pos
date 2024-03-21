@@ -330,11 +330,19 @@ export const getOrder = async (voucherifyOrderId: string) => {
 
     const redemptionsDetails = (
       await Promise.all(
-        Object.keys(order.redemptions || {}).map((redemptionId) =>
-          voucherify.redemptions.get(redemptionId)
-        )
+        Object.keys(order.redemptions || {}).flatMap((redemptionId) => {
+          if (order.redemptions![redemptionId].stacked?.length) {
+            return order.redemptions![redemptionId].stacked?.map((rId) =>
+              voucherify.redemptions.get(rId)
+            )
+          }
+          return voucherify.redemptions.get(redemptionId)
+        })
       )
     ).map(async (redemption) => {
+      if (!redemption) {
+        return false
+      }
       if (redemption.voucher && redemption.order) {
         return {
           redemptionId: redemption.id,

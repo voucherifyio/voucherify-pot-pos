@@ -343,13 +343,16 @@ export const getOrder = async (voucherifyOrderId: string) => {
       if (!redemption) {
         return false
       }
+      console.log(redemption)
       if (redemption.voucher && redemption.order) {
         return {
           redemptionId: redemption.id,
           name: [redemption.voucher.campaign, redemption.voucher.code]
             .filter((e) => e)
             .join(' | '),
-          discount: redemption.order.total_discount_amount,
+          // @ts-ignore
+          discount:
+            redemption.amount || redemption.order.total_applied_discount_amount,
         } as RedemptionsDetail
       }
 

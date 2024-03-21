@@ -15,6 +15,8 @@ export const cartWithDiscount = (
     return {
       ...cart,
       summary: { ...cart.summary, totalDiscountAmount: undefined },
+      vouchersApplied: [],
+      promotionsApplied: [],
     }
   }
 
@@ -70,7 +72,9 @@ const mapRedeemableToPromotion = (
       : redeemable.id,
 })
 
-const mapRedeemableToVoucher = (redeemable: StackableRedeemableResponse) => ({
+const mapRedeemableToVoucher = (
+  redeemable: StackableRedeemableResponse
+): Voucher => ({
   code: redeemable.id,
   discountAmount: centToString(
     redeemable.order?.total_applied_discount_amount ||
@@ -78,5 +82,6 @@ const mapRedeemableToVoucher = (redeemable: StackableRedeemableResponse) => ({
       redeemable.result?.discount?.percent_off ||
       0
   ),
+  giftCredits: redeemable.result?.gift?.credits || null,
   label: redeemable.id,
 })

@@ -26,6 +26,7 @@ export interface Voucher {
   code: string
   label: string
   discountAmount: string
+  giftCredits: number | null
 }
 
 export interface CartItem {

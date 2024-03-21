@@ -24,7 +24,6 @@ export const addLocalisationToOrder = (
   order: OrdersCreate,
   localisation?: string
 ) => {
-  console.log({ localisation })
   if (!localisation || !LOCALISATIONS.includes(localisation)) {
     return order
   }

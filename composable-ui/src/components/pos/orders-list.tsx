@@ -23,12 +23,14 @@ import { signIn, useSession } from 'next-auth/react'
 import dayjs from 'dayjs'
 import { useIntl } from 'react-intl'
 import { Price } from 'components/price'
+import { useRouter } from 'next/router'
 
 export interface LoyaltyCardsListProps {
   onClick?: (orderId: string) => unknown
 }
 
 export const OrdersList = ({ onClick }: LoyaltyCardsListProps) => {
+  const router = useRouter()
   const { status, ordersList } = useOrdersList()
   const intl = useIntl()
   const session = useSession()
@@ -69,12 +71,22 @@ export const OrdersList = ({ onClick }: LoyaltyCardsListProps) => {
                   <Td isNumeric>
                     <Button
                       onClick={() => {
-                        onClick?.(order.id)
+                        router.push(`/order/${order.id}`)
                       }}
                       variant="ghost"
                     >
-                      {order.status === 'PAID' ? 'Return' : 'Preview'}
+                      Receipt
                     </Button>
+                    {order.status === 'PAID' && (
+                      <Button
+                        onClick={() => {
+                          onClick?.(order.id)
+                        }}
+                        variant="ghost"
+                      >
+                        Return
+                      </Button>
+                    )}
                   </Td>
                 </Tr>
               ))}

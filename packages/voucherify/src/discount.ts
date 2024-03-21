@@ -401,7 +401,6 @@ export const getCustomerRedeemables = async (props: {
   )
   try {
     const voucherify = getVoucherify()
-    console.log('redeemables order', order)
     const qualificationResponse =
       await voucherify.qualifications.checkEligibility({
         order,
@@ -458,7 +457,9 @@ export const orderPaid = async (
   const vouchers = order.vouchers_applied?.map((voucher) => ({
     id: voucher.code,
     object: 'voucher' as const,
+    gift: voucher.giftCredits ? { credits: voucher.giftCredits } : undefined,
   }))
+  console.log(vouchers)
   const promotions = order.promotions_applied?.map((promotion) => ({
     id: promotion.id,
     object: 'promotion_tier' as const,

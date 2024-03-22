@@ -42,7 +42,6 @@ export const OrdersList = ({ onClick }: LoyaltyCardsListProps) => {
       {ordersList?.length ? (
         <TableContainer>
           <Table variant="simple" size={'sm'}>
-            <TableCaption>Imperial to metric conversion factors</TableCaption>
             <Thead>
               <Tr>
                 <Th>Created at</Th>

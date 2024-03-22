@@ -13,6 +13,15 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
+  Table,
+  Thead,
+  Tbody,
+  Tfoot,
+  Tr,
+  Th,
+  Td,
+  TableCaption,
+  TableContainer,
 } from '@chakra-ui/react'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { useCart, useCustomerRedeemables } from 'hooks'
@@ -72,16 +81,35 @@ export const CustomerRedeemable = () => {
           Customers coupons and promotions ({session.data?.user?.phoneNumber})
         </Text>
       </HStack>
-      {vouchers?.map((voucher) => (
-        <div key={voucher.id}>
-          <Button onClick={() => addVoucherToCart(voucher.id)} m={2}>
-            {voucher.id}
-          </Button>
-          <label>
-            Campaign: <i>{voucher.campaign_name}</i>
-          </label>
-        </div>
-      ))}
+      <TableContainer mt={6} mb={6}>
+        <Table variant="simple" size={'sm'}>
+          <Thead>
+            <Tr>
+              <Th>Campaign</Th>
+              <Th>Code</Th>
+              <Th isNumeric>Scan</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {vouchers?.map((voucher) => (
+              <Tr key={voucher.id}>
+                <Td>{voucher.campaign_name}</Td>
+                <Td> {voucher.id}</Td>
+                <Td isNumeric>
+                  <Button
+                    size={'sm'}
+                    variant={'ghost'}
+                    onClick={() => addVoucherToCart(voucher.id)}
+                  >
+                    Scan
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+
       {/* <pre>{JSON.stringify(customerRedeemables, null, 2)}</pre> */}
 
       <>

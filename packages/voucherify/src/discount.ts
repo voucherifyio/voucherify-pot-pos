@@ -278,21 +278,25 @@ export const returnProductsFromOrder = async (
     .filter((t) => t.type === 'POINTS_ACCRUAL')
     .filter((t) => t.details.order?.id === oldOrder.id)
 
-  if (transactionsToAmmend.length !== 1) {
+  if (!transactionsToAmmend.length) {
     console.log(
-      '[returnProductsFromOrder] Expected one transaction to ammend',
-      transactionsToAmmend
+      '[returnProductsFromOrder] Expected at least one transaction to ammend',
+      JSON.stringify(transactionsToAmmend)
     )
     throw new Error(
-      '[returnProductsFromOrder] Expected one transaction to ammend'
+      '[returnProductsFromOrder] Expected at least one transaction to ammend'
     )
   }
-  const transactionToAmmend = transactionsToAmmend[0]
-  const pointsToDeduct = transactionToAmmend.details.balance.points
+  const pointsToDeduct = transactionsToAmmend.reduce(
+    (points, transactionToAmmend) => {
+      return points + transactionToAmmend.details.balance.points
+    },
+    0
+  )
 
   console.log(
-    '[returnProductsFromOrder] transactionToAmmend',
-    transactionToAmmend
+    '[returnProductsFromOrder] transactionsToAmmend',
+    transactionsToAmmend
   )
   console.log('[returnProductsFromOrder] pointsToDeduct', pointsToDeduct)
 

@@ -45,7 +45,6 @@ export const LoyaltyCardsList = ({ onClick }: LoyaltyCardsListProps) => {
           {loyaltyCardsList?.map((card) => (
             <Tr key={card.code}>
               <Td>{card.customerPhone}</Td>
-              {/* @ts-ignore */}
               <Td>
                 {' '}
                 <Image
@@ -57,6 +56,7 @@ export const LoyaltyCardsList = ({ onClick }: LoyaltyCardsListProps) => {
                     })
                   }
                   style={{ cursor: 'pointer' }}
+                  //@ts-ignore
                   src={card.barcodeUrl}
                   width={200}
                   height={25}

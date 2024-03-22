@@ -18,4 +18,5 @@ export interface LoyaltyCard {
   id: string
   code: string
   holderId: string
+  customerPhone?: string
 }

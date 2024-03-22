@@ -110,6 +110,10 @@ type Redeemable = {
   id: string
   object: 'campaign' | 'voucher' | 'promotion_tier' | 'promotion_stack'
   campaign_name?: string
+  barcodeUrl: string | boolean | undefined
+  result?: {
+    loyalty_card?: unknown
+  }
 }
 export interface CommerceService {
   /**

@@ -149,7 +149,26 @@ export const getLoyaltyCardsList = async () => {
       'camp_d7nX6wuJJ60BbS0YaAAHa2zy',
       { limit: 100 }
     )
-    return membersResponse.vouchers
+    return (
+      await Promise.all(
+        membersResponse.vouchers.map(async (voucher) => {
+          if (!voucher.holder_id) {
+            return voucher
+          }
+          try {
+            const customer = await voucherify.customers.get(voucher.holder_id)
+            if (customer.object !== 'customer') {
+              return voucher
+            }
+            return { ...voucher, customerPhone: customer.phone }
+          } catch (e) {
+            console.log('missing holder')
+            return voucher
+          }
+          //@ts-ignore
+        })
+      )
+    ).filter((customer) => customer.customerPhone)
   } catch (e) {
     return []
   }
@@ -420,10 +439,20 @@ export const getCustomerRedeemables = async (props: {
         order,
         scenario: 'AUDIENCE_ONLY',
         customer: { source_id: customerId },
-        options: { expand: ['redeemable'] },
+        options: { expand: ['redeemable'], limit: 100 },
       })
+    const redeemables = qualificationResponse.redeemables.data
 
-    return qualificationResponse.redeemables.data
+    return await Promise.all(
+      redeemables.map(async (redeemable) => {
+        if (redeemable.object !== 'voucher') {
+          return { ...redeemable, barcodeUrl: false }
+        }
+        const v = await voucherify.vouchers.get(redeemable.id)
+
+        return { ...redeemable, barcodeUrl: v.assets?.barcode?.url }
+      })
+    )
   } catch (e) {
     return []
   }

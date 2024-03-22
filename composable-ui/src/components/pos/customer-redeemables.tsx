@@ -25,7 +25,7 @@ import {
 } from '@chakra-ui/react'
 import { useSession, signIn, signOut } from 'next-auth/react'
 import { useCart, useCustomerRedeemables } from 'hooks'
-
+import Image from 'next/image'
 import { PosBuyerSetdForm } from '../forms/pos-buyer-set'
 import { CloseIcon } from '@chakra-ui/icons'
 import { useRef, useState } from 'react'
@@ -61,7 +61,8 @@ export const CustomerRedeemable = () => {
   }
 
   const vouchers = customerRedeemables.filter(
-    (redeemable) => redeemable.object === 'voucher'
+    (redeemable) =>
+      redeemable.object === 'voucher' && !redeemable?.result?.loyalty_card
   )
 
   const addVoucherToCart = async (voucherId: string) => {
@@ -87,14 +88,29 @@ export const CustomerRedeemable = () => {
             <Tr>
               <Th>Campaign</Th>
               <Th>Code</Th>
+              <Th>Barcode</Th>
               <Th isNumeric>Scan</Th>
             </Tr>
           </Thead>
           <Tbody>
             {vouchers?.map((voucher) => (
               <Tr key={voucher.id}>
-                <Td>{voucher.campaign_name}</Td>
+                <Td>{voucher.campaign_name || '- - - '}</Td>
                 <Td> {voucher.id}</Td>
+                <Td>
+                  {typeof voucher.barcodeUrl === 'string' && (
+                    // eslint-disable-next-line jsx-a11y/alt-text
+                    <Image
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => addVoucherToCart(voucher.id)}
+                      src={voucher.barcodeUrl}
+                      width={200}
+                      height={25}
+                      alt="asd"
+                    />
+                  )}
+                </Td>
+
                 <Td isNumeric>
                   <Button
                     size={'sm'}
@@ -109,8 +125,7 @@ export const CustomerRedeemable = () => {
           </Tbody>
         </Table>
       </TableContainer>
-
-      {/* <pre>{JSON.stringify(customerRedeemables, null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify(vouchers, null, 2)}</pre> */}
 
       <>
         <Modal isOpen={isOpen} onClose={onClose}>

@@ -40,7 +40,12 @@ module.exports = () => {
       '@composable/voucherify',
     ],
     images: {
-      domains: ['loremflickr.com', 'voucherify-uploads.s3.amazonaws.com'],
+      domains: [
+        'loremflickr.com',
+        'voucherify-uploads.s3.amazonaws.com',
+        'voucherify.io',
+        'dev.dl.voucherify.io',
+      ],
       formats: ['image/avif', 'image/webp'],
       minimumCacheTTL: 60 * 60 * 24 * 30,
     },

@@ -150,25 +150,28 @@ export const getLoyaltyCardsList = async () => {
       { limit: 100 }
     )
     return (
-      await Promise.all(
-        membersResponse.vouchers.map(async (voucher) => {
-          if (!voucher.holder_id) {
-            return voucher
-          }
-          try {
-            const customer = await voucherify.customers.get(voucher.holder_id)
-            if (customer.object !== 'customer') {
+      (
+        await Promise.all(
+          membersResponse.vouchers.map(async (voucher) => {
+            if (!voucher.holder_id) {
               return voucher
             }
-            return { ...voucher, customerPhone: customer.phone }
-          } catch (e) {
-            console.log('missing holder')
-            return voucher
-          }
-          //@ts-ignore
-        })
+            try {
+              const customer = await voucherify.customers.get(voucher.holder_id)
+              if (customer.object !== 'customer') {
+                return voucher
+              }
+              return { ...voucher, customerPhone: customer.phone }
+            } catch (e) {
+              console.log('missing holder')
+              return voucher
+            }
+          })
+        )
       )
-    ).filter((customer) => customer.customerPhone)
+        //@ts-ignore
+        .filter((customer) => customer.customerPhone)
+    )
   } catch (e) {
     return []
   }

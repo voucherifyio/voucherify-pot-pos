@@ -6,10 +6,19 @@ import {
   CloseButton,
   Skeleton,
   AspectRatio,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  CircularProgress,
+  HStack,
 } from '@chakra-ui/react'
+import { debounce } from 'lodash-es'
 import Image from 'next/image'
 import { HorizontalProductCardCommon, ProductCardLayout } from './types'
 import { QuantityPicker } from '../quantity-picker'
+import { useState } from 'react'
 
 export interface HorizontalProductCardEditablePosProps
   extends HorizontalProductCardCommon {
@@ -192,6 +201,7 @@ export const HorizontalProductCardEditablePos = (
   } = props
   const { columns = 3, size = 'lg' } = props
   const { onRemove, onAddToWishlist, onChangeQuantity, isLoading } = props
+  const [localQuantity, setLocalQuantity] = useState(quantity)
 
   const quantityLabel = labels.quantity ?? ''
   const itemPriceLabel = labels.itemPrice ?? ''
@@ -206,6 +216,18 @@ export const HorizontalProductCardEditablePos = (
   if (!gridSettings) {
     return null
   }
+
+  const debouncedOnChangeQuantity = debounce((val) => {
+    onChangeQuantity && onChangeQuantity(val)
+  }, 2000)
+
+  const onQuantityChange = (val: string) => {
+    const q = parseFloat(val) || 0
+    setLocalQuantity(q)
+    debouncedOnChangeQuantity(q)
+  }
+
+  const isQuantityUpdating = quantity !== localQuantity
 
   const gridTemplateAreas = gridSettings.areas
   const gridTemplateColumns = gridSettings.columns
@@ -298,23 +320,36 @@ export const HorizontalProductCardEditablePos = (
           flexDirection="column"
           alignItems={quantityOptions?.align}
         >
-          <Text
-            fontSize={size === 'lg' ? 'xs' : 'xxs'}
-            color="text-muted"
-            fontWeight="extrabold"
+          <HStack>
+            {isQuantityUpdating && (
+              <CircularProgress size={3} isIndeterminate color="green.300" />
+            )}
+            <Text
+              fontSize={size === 'lg' ? 'xs' : 'xxs'}
+              color="text-muted"
+              fontWeight="extrabold"
+            >
+              {quantityOptions?.label}
+            </Text>
+          </HStack>
+
+          {/* <Text>{localQuantity} {quantity}</Text> */}
+          <NumberInput
+            maxW={100}
+            isDisabled={isLoading}
+            value={localQuantity}
+            // precision={4}
+            min={0}
+            max={5000}
+            focusInputOnChange
+            onChange={onQuantityChange}
           >
-            {quantityOptions?.label}
-          </Text>
-          <QuantityPicker
-            size={size === 'lg' ? 'lg' : 'sm'}
-            hideLabel
-            rootProps={{ maxW: '100px' }}
-            isLoading={isLoading}
-            controllableStateProps={{
-              value: quantity,
-              onChange: onChangeQuantity,
-            }}
-          />
+            <NumberInputField />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
         </GridItem>
         <GridItem
           area="wishlist"

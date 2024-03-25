@@ -87,7 +87,7 @@ export const rawAuthOptions: NextAuthOptions = {
             source_id: credentials.phone,
             email: undefined,
             registeredCustomer: false,
-            registrationDate: dayjs().format('YYYY-MM-DD'),
+            registrationDate: undefined,
             phone: credentials.phone,
             name: undefined,
           }

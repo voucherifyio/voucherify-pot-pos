@@ -7,6 +7,7 @@ export const deleteCartItem = protectedProcedure
     z.object({
       cartId: z.string(),
       productId: z.string(),
+      localisation: z.string(),
     })
   )
   .mutation(async ({ input, ctx }) => {
@@ -16,6 +17,5 @@ export const deleteCartItem = protectedProcedure
     return await commerce.deleteCartItem({
       ...input,
       user,
-      localisation: ctx.session.localisation,
     })
   })

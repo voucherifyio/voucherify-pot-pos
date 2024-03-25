@@ -6,6 +6,7 @@ import { CheckoutContext } from 'components/checkout/checkout-provider'
 import { useCart } from './use-cart'
 import { PAYMENT_METHOD } from 'components/checkout/constants'
 import { Order } from '@composable/types'
+import { useLocalisation } from './use-localisation'
 
 interface UsePosCheckoutOptions {
   onPlaceOrderSuccess?: (order?: Order) => void
@@ -20,6 +21,7 @@ export const usePosCheckout = (options?: UsePosCheckoutOptions) => {
   const { client } = api.useContext()
   const { cart } = useCart()
   const [order, setOrder] = useState<Order | null>()
+  const { localisation } = useLocalisation()
 
   const optionsRef = useRef(options)
   optionsRef.current = options
@@ -38,6 +40,7 @@ export const usePosCheckout = (options?: UsePosCheckoutOptions) => {
         for (const item of variables.items?.filter((item) => item.quantity) ||
           []) {
           await client.commerce.addCartItem.mutate({
+            localisation,
             cartId: cartId,
             productId: item.productId,
             quantity: Number(item.quantity),
@@ -52,6 +55,7 @@ export const usePosCheckout = (options?: UsePosCheckoutOptions) => {
       }
 
       const response = await client.commerce.createOrder.mutate({
+        localisation,
         checkout: {
           cartId,
           customer: {

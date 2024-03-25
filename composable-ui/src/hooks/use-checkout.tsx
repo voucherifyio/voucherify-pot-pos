@@ -5,11 +5,13 @@ import { api } from 'utils/api'
 import { CheckoutContext } from 'components/checkout/checkout-provider'
 import { useCart } from './use-cart'
 import { PAYMENT_METHOD } from 'components/checkout/constants'
+import { useLocalisation } from './use-localisation'
 
 export const useCheckout = () => {
   const context = useContext(CheckoutContext)
   const { client } = api.useContext()
   const { cart } = useCart()
+  const { localisation } = useLocalisation()
   if (context === undefined) {
     throw new Error('useCheckout must be used within a CheckoutProvider')
   }
@@ -47,8 +49,10 @@ export const useCheckout = () => {
           }
 
           const response =
-            (await client.commerce.createOrder.mutate({ checkout: params })) ??
-            undefined
+            (await client.commerce.createOrder.mutate({
+              localisation,
+              checkout: params,
+            })) ?? undefined
 
           __checkoutResponse = response
           __setCheckoutResponse(response)

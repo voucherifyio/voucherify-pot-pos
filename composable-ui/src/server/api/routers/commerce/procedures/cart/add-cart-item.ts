@@ -9,6 +9,7 @@ export const addCartItem = protectedProcedure
       productId: z.string(),
       variantId: z.string().optional(),
       quantity: z.number(),
+      localisation: z.string(),
     })
   )
   .mutation(async ({ input, ctx }) => {
@@ -18,6 +19,5 @@ export const addCartItem = protectedProcedure
     return await commerce.addCartItem({
       ...input,
       user,
-      localisation: ctx.session.localisation,
     })
   })

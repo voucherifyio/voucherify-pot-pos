@@ -8,6 +8,7 @@ export const updateCartItem = protectedProcedure
       cartId: z.string(),
       productId: z.string(),
       quantity: z.number(),
+      localisation: z.string(),
     })
   )
   .mutation(async ({ input, ctx }) => {
@@ -17,6 +18,5 @@ export const updateCartItem = protectedProcedure
     return await commerce.updateCartItem({
       ...input,
       user,
-      localisation: ctx.session.localisation,
     })
   })

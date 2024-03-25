@@ -21,9 +21,7 @@ export const rawAuthOptions: NextAuthOptions = {
     CredentialsProvider({
       id: 'anon',
       name: 'Anonymous',
-      credentials: {
-        localisation: { label: 'Localisation', type: 'text' },
-      },
+      credentials: {},
       async authorize(credentials) {
         const anonymousUser = {
           id: randomUUID(),
@@ -31,7 +29,6 @@ export const rawAuthOptions: NextAuthOptions = {
           email: `anonymous_user`,
           image: '',
           phoneNumber: '',
-          localisation: credentials?.localisation,
         }
         //anyone can do an anonymous login
         return anonymousUser
@@ -42,7 +39,6 @@ export const rawAuthOptions: NextAuthOptions = {
       name: 'Only loyalty card',
       credentials: {
         code: { label: 'Loyalty card code', type: 'text' },
-        localisation: { label: 'Localisation', type: 'text' },
       },
       async authorize(credentials, req) {
         if (!credentials?.code) {
@@ -67,7 +63,6 @@ export const rawAuthOptions: NextAuthOptions = {
           registeredCustomer: voucherifyCustomer.registeredCustomer,
           registrationDate: voucherifyCustomer.registrationDate,
           image: '',
-          localisation: credentials?.localisation,
         }
         return customer
       },
@@ -78,7 +73,6 @@ export const rawAuthOptions: NextAuthOptions = {
       name: 'Only phone',
       credentials: {
         phone: { label: 'Phone number', type: 'text' },
-        localisation: { label: 'Localisation', type: 'text' },
       },
       async authorize(credentials, req) {
         if (!credentials?.phone) {
@@ -122,7 +116,6 @@ export const rawAuthOptions: NextAuthOptions = {
           registeredCustomer: voucherifyCustomer.registeredCustomer,
           registrationDate: voucherifyCustomer.registrationDate,
           image: '',
-          localisation: credentials?.localisation,
         }
         return customer
       },
@@ -171,9 +164,6 @@ export const rawAuthOptions: NextAuthOptions = {
           id: token.sub,
           loggedIn: false,
         }
-        if (session?.localisation) {
-          newToken.localisation = session.localisation
-        }
         return newToken
       }
       const newToken = {
@@ -182,15 +172,8 @@ export const rawAuthOptions: NextAuthOptions = {
         loggedIn: true,
       }
 
-      if (trigger === 'update' && session?.localisation) {
-        newToken.localisation = session.localisation
-      }
-
       if (user?.phoneNumber) {
         newToken.phoneNumber = user.phoneNumber
-      }
-      if (user?.localisation) {
-        newToken.localisation = user.localisation
       }
       if (user?.sourceId) {
         newToken.sourceId = user.sourceId
@@ -216,10 +199,6 @@ export const rawAuthOptions: NextAuthOptions = {
         loggedIn: (token?.loggedIn as boolean) ?? false,
       }
 
-      if (trigger === 'update' && newSession?.localisation) {
-        newSessionObj.localisation = newSession.localisation
-      }
-
       if (newSessionObj?.user && token.phoneNumber) {
         newSessionObj.user.phoneNumber = token.phoneNumber
       }
@@ -234,10 +213,6 @@ export const rawAuthOptions: NextAuthOptions = {
       }
       if (newSessionObj?.user && token.registeredCustomer) {
         newSessionObj.user.registeredCustomer = token.registeredCustomer
-      }
-
-      if (token.localisation) {
-        newSessionObj.localisation = token.localisation
       }
 
       return newSessionObj

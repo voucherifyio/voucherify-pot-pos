@@ -10,6 +10,7 @@ import {
   LOCAL_STORAGE_CART_UPDATED_AT,
 } from 'utils/constants'
 import { useCart } from './use-cart'
+import { useLocalisation } from './use-localisation'
 const USE_CUSTOMER_REDEEMABLE_KEY = 'useCustomerRedeemables'
 
 export const useCustomerRedeemables = () => {
@@ -18,21 +19,17 @@ export const useCustomerRedeemables = () => {
   const { client } = api.useContext()
   const { cart } = useCart()
   const [cartId] = useLocalStorage(LOCAL_STORAGE_CART_ID, '')
+  const { localisation } = useLocalisation()
 
   /**
    * Fetch Cart
    */
   const { data: customerRedeemables, status } = useQuery(
-    [
-      USE_CUSTOMER_REDEEMABLE_KEY,
-      session.data?.localisation,
-      'useCartKey',
-      cartId,
-      cart,
-    ],
+    [USE_CUSTOMER_REDEEMABLE_KEY, localisation, 'useCartKey', cartId, cart],
     async () => {
       const response = await client.commerce.getCustomerRedeemables.query({
         cartId,
+        localisation,
       })
       return response
     },

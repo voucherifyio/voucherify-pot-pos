@@ -4,10 +4,9 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
-import { InputField, TitleSection } from '@composable/ui'
-import { api } from 'utils/api'
+import { InputField } from '@composable/ui'
 import { AccountPage } from '../account/account-drawer'
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 
 export interface ForgotPasswordFormProps {
   type?: AccountPage
@@ -17,7 +16,6 @@ export const PosBuyerSetdForm = ({
   type = AccountPage.DRAWER,
 }: ForgotPasswordFormProps) => {
   const intl = useIntl()
-  const session = useSession()
   const {
     register,
     handleSubmit,
@@ -26,8 +24,6 @@ export const PosBuyerSetdForm = ({
     resolver: yupResolver(posByerSetFormSchema({ intl })),
     mode: 'all',
   })
-
-  const resetPassword = false // api.commerce.resetPassword.useMutation()
 
   const content = {
     title: 'Customer',
@@ -57,7 +53,6 @@ export const PosBuyerSetdForm = ({
             signIn('only-phone', {
               redirect: true,
               phone: data.phone,
-              localisation: session.data?.localisation,
             })
           })}
         >

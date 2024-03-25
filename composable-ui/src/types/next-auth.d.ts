@@ -8,7 +8,6 @@ declare module 'next-auth' {
     id?: string
     loggedIn?: boolean
     sub?: string
-    localisation?: string
     user?: {
       // id: string
       phoneNumber?: string
@@ -25,7 +24,6 @@ declare module 'next-auth' {
     sourceId?: string
     registrationDate?: string
     registeredCustomer?: boolean
-    localisation?: string
   }
 }
 declare module 'next-auth/jwt' {
@@ -38,6 +36,5 @@ declare module 'next-auth/jwt' {
     sourceId?: string
     registrationDate?: string
     registeredCustomer?: boolean
-    localisation?: string
   }
 }

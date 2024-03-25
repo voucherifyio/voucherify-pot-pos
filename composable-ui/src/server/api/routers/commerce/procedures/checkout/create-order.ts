@@ -5,6 +5,7 @@ import { commerce } from 'server/data-source'
 export const createOrder = protectedProcedure
   .input(
     z.object({
+      localisation: z.string(),
       checkout: z.object({
         cartId: z.string(),
         customer: z.object({
@@ -39,6 +40,5 @@ export const createOrder = protectedProcedure
     return await commerce.createOrder({
       ...input,
       user,
-      localisation: ctx.session.localisation,
     })
   })

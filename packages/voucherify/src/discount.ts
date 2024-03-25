@@ -142,6 +142,15 @@ export const getCustomerByLoyaltyCard = async (code: string) => {
   }
 }
 
+const CUSTOMERS_PHONES_CACHE = new Map<string, string | false>()
+
+setInterval(() => {
+  console.log(
+    `[getLoyaltyCardsList] Clear cache event, current cache size ${CUSTOMERS_PHONES_CACHE.size}`
+  )
+  CUSTOMERS_PHONES_CACHE.clear()
+}, 5 * 60 * 1000)
+
 export const getLoyaltyCardsList = async () => {
   try {
     const voucherify = getVoucherify()
@@ -157,13 +166,45 @@ export const getLoyaltyCardsList = async () => {
               return voucher
             }
             try {
+              const hasPhoneCached = CUSTOMERS_PHONES_CACHE.has(
+                voucher.holder_id
+              )
+
+              if (hasPhoneCached) {
+                const phoneCached = CUSTOMERS_PHONES_CACHE.get(
+                  voucher.holder_id
+                )
+                console.log(
+                  `[getLoyaltyCardsList] Customer phone get from cache`,
+                  { holderId: voucher.holder_id, phone: phoneCached }
+                )
+                return { ...voucher, customerPhone: phoneCached }
+              }
+
               const customer = await voucherify.customers.get(voucher.holder_id)
-              if (customer.object !== 'customer') {
+
+              if (customer.object !== 'customer' || !customer.phone) {
+                CUSTOMERS_PHONES_CACHE.set(voucher.holder_id, false)
+                console.log(
+                  `[getLoyaltyCardsList] Customer missing phone save in cache`,
+                  { holderId: voucher.holder_id }
+                )
                 return voucher
               }
+
+              CUSTOMERS_PHONES_CACHE.set(voucher.holder_id, customer.phone)
+              console.log(
+                `[getLoyaltyCardsList] Customer missing phone save in cache`,
+                { holderId: voucher.holder_id, phone: customer.phone }
+              )
+
               return { ...voucher, customerPhone: customer.phone }
             } catch (e) {
-              console.log('missing holder')
+              CUSTOMERS_PHONES_CACHE.set(voucher.holder_id, false)
+              console.log(
+                `[getLoyaltyCardsList] Customer missing holder save in cache`,
+                { holderId: voucher.holder_id }
+              )
               return voucher
             }
           })

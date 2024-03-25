@@ -9,7 +9,15 @@ import {
 import { useSession } from 'next-auth/react'
 import { Select } from '@chakra-ui/react'
 
-const LOCALISATIONS = ['West Parkland', 'Fas Gas', 'Parkland Calgary']
+const LOCALISATIONS = [
+  'West Parkland',
+  'Fas Gas',
+  'Parkland Calgary',
+  'Husky Market',
+  'Petro Canada Toronto',
+  'Esso Vancouver',
+  'Ultramar Montreal',
+]
 
 export const Localisation = () => {
   const session = useSession()

@@ -18,7 +18,15 @@ export const orderToVoucherifyOrder = (order: Order): OrdersCreate => {
     }),
   }
 }
-const LOCALISATIONS = ['West Parkland', 'Fas Gas', 'Parkland Calgary']
+const LOCALISATIONS = [
+  'West Parkland',
+  'Fas Gas',
+  'Parkland Calgary',
+  'Husky Market',
+  'Petro Canada Toronto',
+  'Esso Vancouver',
+  'Ultramar Montreal',
+]
 
 export const addLocalisationToOrder = (
   order: OrdersCreate,

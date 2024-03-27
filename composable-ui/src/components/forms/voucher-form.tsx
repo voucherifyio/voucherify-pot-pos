@@ -31,10 +31,10 @@ export const VoucherForm = () => {
     onCartVoucherAddError: (message) => {
       setErrorMessage(message || 'Could not add voucher')
       setShowAlert(true)
-      const alertTimer = setTimeout(() => {
-        setShowAlert(false)
-      }, 3000)
-      return () => clearTimeout(alertTimer)
+      // const alertTimer = setTimeout(() => {
+      //   setShowAlert(false)
+      // }, 10000)
+      // return () => clearTimeout(alertTimer)
     },
   })
   const content = {

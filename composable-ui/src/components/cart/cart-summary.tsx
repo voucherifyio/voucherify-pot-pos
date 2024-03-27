@@ -69,7 +69,7 @@ export const CartSummary = ({
             </CartSummaryItem>
           )}
 
-          {_cartData.summary?.shipping && (
+          {/* {_cartData.summary?.shipping && (
             <CartSummaryItem
               label={intl.formatMessage({ id: 'cart.summary.shipping' })}
             >
@@ -78,7 +78,7 @@ export const CartSummary = ({
                 price={_cartData.summary.shipping}
               />
             </CartSummaryItem>
-          )}
+          )} */}
           {promotions.length > 0 && (
             <>
               <Divider m={'2px 0'} />

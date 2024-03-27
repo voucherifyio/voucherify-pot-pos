@@ -122,10 +122,17 @@ export const getCustomerByLoyaltyCard = async (code: string) => {
     const voucherify = getVoucherify()
     const loyaltyMember = await voucherify.loyalties.getMember(null, code)
     if (!loyaltyMember || !loyaltyMember.holder_id) {
+      console.log(
+        `[getCustomerByLoyaltyCard] Is not a loyalty member`,
+        loyaltyMember
+      )
       return false
     }
     const customer = await voucherify.customers.get(loyaltyMember.holder_id)
     if (customer.object !== 'customer') {
+      console.log(
+        `[getCustomerByLoyaltyCard] Customer not found, holderId: ${loyaltyMember.holder_id}`
+      )
       return false
     }
     return {
@@ -134,10 +141,11 @@ export const getCustomerByLoyaltyCard = async (code: string) => {
       email: customer.email,
       phone: customer.phone,
       name: customer.name,
-      registeredCustomer: !!customer.metadata['registered_customer'] || false,
-      registrationDate: customer.metadata['registration_date'],
+      registeredCustomer: !!customer.metadata?.['registered_customer'] || false,
+      registrationDate: customer.metadata?.['registration_date'],
     }
   } catch (e) {
+    console.log(`[getCustomerByLoyaltyCard] Error`, e)
     return false
   }
 }
@@ -183,7 +191,7 @@ export const getLoyaltyCardsList = async () => {
 
               const customer = await voucherify.customers.get(voucher.holder_id)
 
-              if (customer.object !== 'customer' || !customer.phone) {
+              if (customer.object !== 'customer' || !customer.source_id) {
                 CUSTOMERS_PHONES_CACHE.set(voucher.holder_id, false)
                 console.log(
                   `[getLoyaltyCardsList] Customer missing phone save in cache`,
@@ -192,13 +200,13 @@ export const getLoyaltyCardsList = async () => {
                 return voucher
               }
 
-              CUSTOMERS_PHONES_CACHE.set(voucher.holder_id, customer.phone)
+              CUSTOMERS_PHONES_CACHE.set(voucher.holder_id, customer.source_id)
               console.log(
                 `[getLoyaltyCardsList] Customer missing phone save in cache`,
-                { holderId: voucher.holder_id, phone: customer.phone }
+                { holderId: voucher.holder_id, phone: customer.source_id }
               )
 
-              return { ...voucher, customerPhone: customer.phone }
+              return { ...voucher, customerPhone: customer.source_id }
             } catch (e) {
               CUSTOMERS_PHONES_CACHE.set(voucher.holder_id, false)
               console.log(

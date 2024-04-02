@@ -18,7 +18,7 @@ import { debounce } from 'lodash-es'
 import Image from 'next/image'
 import { HorizontalProductCardCommon, ProductCardLayout } from './types'
 import { QuantityPicker } from '../quantity-picker'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export interface HorizontalProductCardEditablePosProps
   extends HorizontalProductCardCommon {
@@ -203,6 +203,17 @@ export const HorizontalProductCardEditablePos = (
   const { onRemove, onAddToWishlist, onChangeQuantity, isLoading } = props
   const [localQuantity, setLocalQuantity] = useState(quantity)
 
+  useEffect(() => {
+    setLocalQuantity(quantity)
+  }, [quantity])
+
+  const debouncedOnChangeQuantity = useCallback(
+    debounce((val) => {
+      onChangeQuantity && onChangeQuantity(val)
+    }, 2000),
+    [onChangeQuantity]
+  )
+
   const quantityLabel = labels.quantity ?? ''
   const itemPriceLabel = labels.itemPrice ?? ''
   const removeLabel = labels.remove ?? ''
@@ -216,10 +227,6 @@ export const HorizontalProductCardEditablePos = (
   if (!gridSettings) {
     return null
   }
-
-  const debouncedOnChangeQuantity = debounce((val) => {
-    onChangeQuantity && onChangeQuantity(val)
-  }, 2000)
 
   const onQuantityChange = (val: string) => {
     const q = parseFloat(val) || 0

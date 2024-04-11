@@ -10,7 +10,7 @@ import {
   LOCAL_STORAGE_CART_ID,
   LOCAL_STORAGE_CART_UPDATED_AT,
 } from 'utils/constants'
-import { Cart } from '@composable/types'
+import { Cart, ProductListResponse } from '@composable/types'
 import { useSession } from 'next-auth/react'
 import { useLocalisation } from './use-localisation'
 
@@ -102,13 +102,13 @@ export const useCart = (options?: UseCartOptions) => {
     ['cartItemAdd'],
     async (variables: {
       cartId: string
-      productId: string
+      product: ProductListResponse
       variantId?: string
       quantity: number
     }) => {
       const params = {
         cartId: variables.cartId,
-        productId: variables.productId,
+        product: variables.product,
         variantId: variables.variantId,
         quantity: variables.quantity,
         localisation,
@@ -136,7 +136,8 @@ export const useCart = (options?: UseCartOptions) => {
    */
   const cartItemAddMutation = useCallback(
     async (params: {
-      productId: string
+      // productId: string
+      product: ProductListResponse
       variantId?: string
       quantity: number
     }) => {
@@ -144,7 +145,7 @@ export const useCart = (options?: UseCartOptions) => {
       await cartItemAdd.mutate(
         {
           cartId: id,
-          productId: params.productId,
+          product: params.product,
           variantId: params.variantId,
           quantity: params.quantity,
         },

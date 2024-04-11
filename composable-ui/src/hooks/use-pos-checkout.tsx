@@ -5,7 +5,7 @@ import { api } from 'utils/api'
 import { CheckoutContext } from 'components/checkout/checkout-provider'
 import { useCart } from './use-cart'
 import { PAYMENT_METHOD } from 'components/checkout/constants'
-import { Order } from '@composable/types'
+import { Order, CartItem, ProductListResponse } from '@composable/types'
 import { useLocalisation } from './use-localisation'
 
 interface UsePosCheckoutOptions {
@@ -31,7 +31,9 @@ export const usePosCheckout = (options?: UsePosCheckoutOptions) => {
    */
   const placeOrderMutation = useMutation(
     ['cartCheckout'],
-    async (variables: { items?: Item[] }) => {
+    async (variables: {
+      items?: (ProductListResponse & { quantity: number })[]
+    }) => {
       let cartId
       if (variables.items) {
         const response = await client.commerce.createCart.mutate()
@@ -42,7 +44,7 @@ export const usePosCheckout = (options?: UsePosCheckoutOptions) => {
           await client.commerce.addCartItem.mutate({
             localisation,
             cartId: cartId,
-            productId: item.productId,
+            product: item,
             quantity: Number(item.quantity),
           })
         }
@@ -94,7 +96,7 @@ export const usePosCheckout = (options?: UsePosCheckoutOptions) => {
   )
 
   const placeOrder = useCallback(
-    (items?: Item[]) => {
+    (items?: (ProductListResponse & { quantity: number })[]) => {
       return placeOrderMutation.mutateAsync({ items })
     },
     [placeOrderMutation]

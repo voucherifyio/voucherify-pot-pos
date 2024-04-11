@@ -9,21 +9,20 @@ import { updateCartDiscount } from '@composable/voucherify'
 
 export const addCartItem: CommerceService['addCartItem'] = async ({
   cartId,
-  productId,
+  product,
   quantity,
   user,
   localisation,
 }) => {
   const cart = (await getCart(cartId)) || generateEmptyCart(cartId)
-
   const isProductInCartAlready = cart.items.some(
-    (item) => item.id === productId
+    (item) => item.id === product.id
   )
 
   if (isProductInCartAlready) {
-    cart.items.find((item) => item.id === productId)!.quantity++
+    cart.items.find((item) => item.id === product.id)!.quantity++
   } else {
-    const newItem = generateCartItem(productId, quantity)
+    const newItem = generateCartItem(product, quantity)
     cart.items.push(newItem)
   }
 

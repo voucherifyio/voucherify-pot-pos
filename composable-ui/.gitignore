@@ -1,2 +1,4 @@
 public/sitemap*
 public/robots.txt
+
+.env*.local

@@ -32,13 +32,14 @@ export const ProductsList = ({
             key={`${item.name}-${item.id}`}
             columns={2}
             size="lg"
-            name={item.name}
+            name={item.name || item.id}
             brand={item.brand}
             quantity={item.quantity}
             image={{
-              src: item.image.url,
-              alt: item.image.alt ?? item.name,
-              onClickImage: () => router.push(`/product/${item.slug}`),
+              src: item.image_url || '',
+              alt: item.name || '',
+              onClickImage: () =>
+                router.push(`/product/${item.slug}?id=${item.id}`),
             }}
             regularPrice={intl.formatNumber(item.price, currencyFormatConfig)}
             labels={{

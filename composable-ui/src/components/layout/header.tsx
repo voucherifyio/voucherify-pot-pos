@@ -79,14 +79,14 @@ export const Header = () => {
                 height: 'full',
               }}
             />
-            <MenuItem
+            {/* <MenuItem
               label="Ev Kiosk & Pump"
               href={`/ev-kiosk-and-pomp`}
               state={'/ev-kiosk-and-pomp' === pathname ? 'Active' : 'Default'}
               rootProps={{
                 height: 'full',
               }}
-            />
+            /> */}
             <MenuItem
               label="Return Products"
               href={`/return-products`}

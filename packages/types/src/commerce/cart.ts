@@ -32,13 +32,12 @@ export interface Voucher {
 export interface CartItem {
   id: string
   category: string
-  type: string
-  brand: string
-  image: { url: string; alt: string }
-  name: string
+  brand?: string | undefined
+  sku?: string | undefined
+  image_url: string | null
+  name: string | null
   price: number
   tax: number
   quantity: number
-  sku: string
   slug: string
 }

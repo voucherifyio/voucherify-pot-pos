@@ -7,13 +7,12 @@ import {
 const LOCAL_STORAGE_LOCALISATION = 'pos_localisation_id'
 
 export const LOCALISATIONS = [
-  'West Parkland',
-  'Fas Gas',
-  'Parkland Calgary',
-  'Husky Market',
-  'Petro Canada Toronto',
-  'Esso Vancouver',
-  'Ultramar Montreal',
+  'New York',
+  'London',
+  'Paris',
+  'Warsaw',
+  'Vancouver',
+  'Lima',
 ]
 
 export const useLocalisation = () => {

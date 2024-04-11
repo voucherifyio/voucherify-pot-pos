@@ -15,7 +15,7 @@ export const CartItemData = ({ cartItem }: CartItemDataProps) => {
     <Stack direction="row" spacing={{ base: '3', md: '5' }} flexGrow={1}>
       <Link
         as={NextLink}
-        href={`/product/${cartItem.slug}`}
+        href={`/product/${cartItem.slug}?id=${cartItem.id}`}
         display="flex"
         rounded="base"
       >
@@ -28,8 +28,8 @@ export const CartItemData = ({ cartItem }: CartItemDataProps) => {
         >
           <Image
             fit="cover"
-            src={cartItem.image.url || APP_CONFIG.IMAGE_PLACEHOLDER}
-            alt={cartItem.image.alt}
+            src={cartItem.image_url || APP_CONFIG.IMAGE_PLACEHOLDER}
+            alt={cartItem.name || ''}
             draggable="false"
             loading="lazy"
             width="full"
@@ -40,9 +40,6 @@ export const CartItemData = ({ cartItem }: CartItemDataProps) => {
       <Box maxWidth="calc(100% - 130px)">
         <Stack fontSize="sm" align="flex-start">
           <Text fontWeight="semibold">{cartItem.name}</Text>
-          <Text color="text-muted">
-            {intl.formatMessage({ id: 'product.sku' }, { sku: cartItem.sku })}
-          </Text>
         </Stack>
       </Box>
     </Stack>

@@ -23,17 +23,22 @@ export const ProductPage = () => {
   const intl = useIntl()
   const toast = useToast()
   const { data: product, isLoading } = api.commerce.getProductBy.useQuery({
-    slug: `${router.query.slug}`,
+    id: `${router.query.id}`,
   })
 
   // TODO: breadcrumb data should come from product
   const breadcrumb = [
     { href: '/', label: 'Home' },
     {
-      href: `/category/${product?.category}`,
-      label: product?.category ?? 'Category',
+      href: `/category/${
+        product?.metadata?.category || product?.metadata?.food_category || ''
+      }`,
+      label:
+        (product?.metadata?.category ||
+          product?.metadata?.food_category ||
+          '') ??
+        'Category',
     },
-    { href: '/', label: product?.type ?? 'Type' },
   ]
   const [quantity, setQuantity] = useState(1)
   const { addCartItem } = useCart({
@@ -63,7 +68,7 @@ export const ProductPage = () => {
     }
 
     addCartItem.mutate({
-      productId: product.id,
+      product,
       quantity: quantity,
     })
   }
@@ -76,24 +81,15 @@ export const ProductPage = () => {
     return <DynamicNoMatchPage />
   }
 
-  const phpAccordion = [
-    {
-      defaultOpen: false,
-      label: 'Material & Care',
-      content: product.materialAndCare,
-      id: 'b3ac576d-c527-4818-9540-fbc3933b5fb7',
-    },
-    ...pdpAccordionData,
-  ]
+  const phpAccordion = [...pdpAccordionData]
 
   return (
     <PdpLayout
-      seo={<NextSeo title={product.name} description={product.description} />}
-      brand={product.brand}
+      seo={<NextSeo title={product.name} />}
       breadcrumb={<Breadcrumb items={breadcrumb} />}
-      title={product.name}
-      description={product.description}
+      title={product.name || ''}
       isLoaded={!isLoading}
+      description={''}
       sectionOrder={[
         'breadcrumb',
         'brand',
@@ -111,7 +107,7 @@ export const ProductPage = () => {
         height: 'fit-content',
         top: '12',
       }}
-      price={<Price price={product.price.toString()} />}
+      price={<Price price={((product?.price ?? 0) / 100)?.toString()} />}
       main={
         <>
           <HStack
@@ -180,16 +176,10 @@ export const ProductPage = () => {
             width: '100%',
             borderRadius: 'base',
           }}
-          images={
-            product?.images?.length
-              ? product.images.map((image, i) => {
-                  return {
-                    src: image.url,
-                    alt: image.alt,
-                    priority: i === 0,
-                  }
-                })
-              : [{ src: APP_CONFIG.IMAGE_PLACEHOLDER, alt: '' }]
+          image={
+            product?.image_url
+              ? product.image_url
+              : APP_CONFIG.IMAGE_PLACEHOLDER
           }
         />
       }

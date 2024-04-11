@@ -9,43 +9,35 @@ import {
   Text,
   Divider,
 } from '@chakra-ui/react'
+import { useGetProductList } from 'hooks/use-get-products'
+import { ProductListResponse } from '@composable/types'
 
 export interface ProductsProps {
-  onClick?: (productId: string) => unknown
-  filterProductsByName?: string[]
-  filterProductsOutByName?: string[]
+  onClick?: (product: ProductListResponse) => unknown
 }
 
-export const ProductsList = ({
-  onClick,
-  filterProductsByName,
-  filterProductsOutByName,
-}: ProductsProps) => {
-  const produuctsToList = filterProductsByName
-    ? products.filter((product) => filterProductsByName.includes(product.name))
-    : filterProductsOutByName
-    ? products.filter(
-        (product) => !filterProductsOutByName.includes(product.name)
-      )
-    : products
+export const ProductsList = ({ onClick }: ProductsProps) => {
+  const { productsList, status } = useGetProductList()
+
   return (
     <SimpleGrid minChildWidth="120px" spacing={2}>
-      {produuctsToList
-        .sort((p1, p2) => p1.type.localeCompare(p2.type))
-        .map((product) => (
+      {productsList?.length === 0 ? (
+        <p>no products</p>
+      ) : (
+        productsList?.map((product) => (
           <Card
             _hover={{ bg: 'lightgray' }}
             size={'sm'}
             cursor={'pointer'}
             maxW={120}
-            onClick={() => onClick?.(product.id)}
-            key={product.id}
+            onClick={() => onClick?.(product)}
+            key={product.name}
           >
             <CardBody alignContent={'center'}>
-              {product.images[0] && (
+              {product.image_url && (
                 <Image
-                  src={product.images[0]?.url}
-                  alt={product.images[0]?.alt}
+                  src={product.image_url || ''}
+                  alt={product.name || ''}
                   height={Number(180 / 3)}
                   width={Number(145 / 3)}
                   quality={90}
@@ -55,7 +47,8 @@ export const ProductsList = ({
               <Text fontSize="xs">{product.name}</Text>
             </CardBody>
           </Card>
-        ))}
+        ))
+      )}
     </SimpleGrid>
   )
 }

@@ -24,7 +24,7 @@ import { Customer } from './pos/customer'
 import { CustomerRedeemable } from './pos/customer-redeemables'
 import { useState } from 'react'
 import { LoyaltyCardsList } from './pos/loyalty-cards-list'
-import { Order } from '@composable/types'
+import { Order, ProductListResponse } from '@composable/types'
 import { useRouter } from 'next/router'
 
 export const PosPage = () => {
@@ -71,13 +71,13 @@ export const PosPage = () => {
     style: 'currency',
   }
 
-  const handleAddToCart = (productId: unknown) => {
-    if (!productId || typeof productId !== 'string') {
+  const handleAddToCart = (product: ProductListResponse) => {
+    if (!product.id || typeof product.id !== 'string') {
       return
     }
 
     addCartItem.mutate({
-      productId: productId,
+      product,
       quantity: 1,
     })
   }
@@ -165,13 +165,16 @@ export const PosPage = () => {
                         brand={item.brand}
                         columns={4}
                         details={[
-                          { name: 'SKU', value: item.sku, id: item.id },
-                          { name: 'Type', value: item.type, id: item.id },
+                          {
+                            name: 'Category',
+                            value: item.category,
+                            id: item.id,
+                          },
                         ]}
                         size={productCartSize}
                         image={{
-                          src: item.image.url,
-                          alt: item.image.alt ?? item.name,
+                          src: item.image_url || '',
+                          alt: item.name || '',
                         }}
                         name={item.name || ''}
                         labels={{

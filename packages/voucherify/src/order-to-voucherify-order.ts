@@ -19,13 +19,12 @@ export const orderToVoucherifyOrder = (order: Order): OrdersCreate => {
   }
 }
 const LOCALISATIONS = [
-  'West Parkland',
-  'Fas Gas',
-  'Parkland Calgary',
-  'Husky Market',
-  'Petro Canada Toronto',
-  'Esso Vancouver',
-  'Ultramar Montreal',
+  'New York',
+  'London',
+  'Paris',
+  'Warsaw',
+  'Vancouver',
+  'Lima',
 ]
 
 export const addLocalisationToOrder = (
@@ -37,6 +36,6 @@ export const addLocalisationToOrder = (
   }
   return {
     ...order,
-    metadata: { ...(order.metadata || {}), location_id: [localisation] },
+    metadata: { ...(order?.metadata || {}), location_id: localisation },
   }
 }

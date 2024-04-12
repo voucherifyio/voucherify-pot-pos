@@ -4,5 +4,5 @@ import { getProducts } from '@composable/voucherify'
 export const getProductsList: CommerceService['getProductsList'] = async () => {
   const productsList = await getProducts()
 
-  return productsList
+  return productsList?.filter((product) => product.metadata?.category)
 }

@@ -50,13 +50,9 @@ export const Receipt = ({ order }: ReceiptProps) => {
     })
   }
 
-  const locationId =
-    order.metadata &&
-    order.metadata.location_id &&
-    Array.isArray(order.metadata.location_id) &&
-    order.metadata.location_id.length === 1
-      ? order.metadata.location_id[0]
-      : 'Lorem ipsum'
+  const locationId = order?.metadata?.location_id
+    ? order.metadata?.location_id
+    : 'Lorem ipsum'
 
   return (
     <Card maxW={500} p={4} variant="elevated" colorScheme="gray">
@@ -71,7 +67,7 @@ export const Receipt = ({ order }: ReceiptProps) => {
         </Center>
 
         <Text align="center" fontSize="sm" mt={3}>
-          Address: {locationId} , 1234-5{' '}
+          Address: {<>{locationId}</>}, 1234-5
         </Text>
         <Text align="center" fontSize="sm">
           Tel: +1 012 345 67 89{' '}

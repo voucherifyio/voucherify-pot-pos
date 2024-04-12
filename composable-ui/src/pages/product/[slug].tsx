@@ -22,8 +22,9 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { ssg } = await createServerApp({ context })
-  const slug = `${context?.params?.slug?.toString()}`
-  await ssg.commerce.getProductBy.prefetch({ slug })
+  // const slug = `${context?.params?.slug?.toString()}`
+  const productId = `${context?.params?.id?.toString()}`
+  await ssg.commerce.getProductBy.prefetch({ id: productId })
 
   return {
     props: {

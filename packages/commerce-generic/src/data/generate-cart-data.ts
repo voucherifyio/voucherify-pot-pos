@@ -1,11 +1,5 @@
-import { Cart, CartItem } from '@composable/types'
-import products from './products.json'
+import { Cart, CartItem, ProductListResponse } from '@composable/types'
 import { randomUUID } from 'crypto'
-
-const findProductById = (id: string) => {
-  return products.find((product) => product.id === id) ?? products[0]
-}
-
 export const generateEmptyCart = (cartId?: string): Cart => ({
   id: cartId || randomUUID(),
   items: [],
@@ -14,22 +8,24 @@ export const generateEmptyCart = (cartId?: string): Cart => ({
   summary: {},
 })
 
-export const generateCartItem = (productId: string, quantity: number) => {
-  const _product = findProductById(productId)
-  return {
-    brand: _product.brand,
-    category: _product.category,
-    id: _product.id,
-    image: _product.images[0],
-    name: _product.name,
-    price: _product.price,
-    tax: _product.price * 0.07,
-    quantity: quantity ?? 1,
-    sku: _product.sku,
-    slug: _product.slug,
-    type: _product.type,
-  }
-}
+export const generateCartItem = (
+  product: ProductListResponse,
+  quantity: number
+) => ({
+  id: product.id,
+  category: product.metadata?.food_category || product.metadata?.category || '',
+  brand: product.metadata?.brand,
+  image_url: product.image_url || null,
+  name: product.name || null,
+  price: product.price ? product.price / 100 : 0,
+  tax: product.price ? product.price * 0.07 : 0,
+  quantity: quantity ?? 1,
+  slug:
+    product.name
+      ?.toLowerCase()
+      .replace(/[^\w\s]/gi, '')
+      .replace(' ', '-') || product.id,
+})
 
 export const calculateCartSummary = (
   cartItems: CartItem[]

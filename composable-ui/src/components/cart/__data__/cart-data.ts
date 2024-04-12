@@ -6,18 +6,13 @@ export const cartData: CartData = {
     {
       id: '1',
       category: 'Accessories',
-      type: 'Bag',
       name: 'Venture Daypack',
       brand: 'Riley',
       price: 129,
       tax: 0.07,
-      image: {
-        url: '/img/products/_0000s_0001_backpack-rugged-black-front.jpg',
-        alt: '',
-      },
-      sku: 'SKU-A1-2345',
-      slug: 'venture-daypack',
+      image_url: '/img/products/_0000s_0001_backpack-rugged-black-front.jpg',
       quantity: 1,
+      slug: 'venture-daypack',
     },
   ],
   summary: {

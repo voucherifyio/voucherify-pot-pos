@@ -263,7 +263,7 @@ export const getOrdersList = async (
       id: order.id,
       created_at: order.created_at,
       status: order.status,
-      location: order?.metadata?.location_id?.[0] || '',
+      location: order?.metadata?.location_id || '',
       amount: order.amount,
     }))
   } catch (e) {
@@ -484,6 +484,7 @@ export const getCustomerRedeemables = async (props: {
     cartToVoucherifyOrder(cart),
     localisation
   )
+  console.log(order, 'ORDER???')
   try {
     const voucherify = getVoucherify()
     const qualificationResponse =

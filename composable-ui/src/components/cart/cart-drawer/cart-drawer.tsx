@@ -102,15 +102,18 @@ export const CartDrawer = () => {
                         columns={4}
                         editable
                         details={[
-                          { name: 'SKU', value: item.sku, id: item.id },
-                          { name: 'Type', value: item.type, id: item.id },
+                          {
+                            name: 'Category',
+                            value: item.category,
+                            id: item.id,
+                          },
                         ]}
                         size={'sm'}
                         image={{
-                          src: item.image.url,
-                          alt: item.image.alt ?? item.name,
+                          src: item.image_url || '',
+                          alt: item.name || '',
                           onClickImage: () =>
-                            router.push(`/product/${item.slug}`),
+                            router.push(`/product/${item.slug}?id=${item.id}`),
                         }}
                         name={item.name || ''}
                         labels={{

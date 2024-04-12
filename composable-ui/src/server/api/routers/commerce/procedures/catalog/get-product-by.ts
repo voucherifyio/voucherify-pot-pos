@@ -3,7 +3,7 @@ import { publicProcedure } from 'server/api/trpc'
 import { commerce } from 'server/data-source'
 
 export const getProductBy = publicProcedure
-  .input(z.object({ slug: z.string() }))
+  .input(z.object({ id: z.string() }))
   .query(async ({ input }) => {
-    return await commerce.getProductBy({ slug: input.slug })
+    return await commerce.getProductBy({ id: input.id })
   })

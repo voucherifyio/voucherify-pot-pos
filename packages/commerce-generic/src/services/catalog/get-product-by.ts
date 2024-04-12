@@ -1,8 +1,7 @@
 import { CommerceService } from '@composable/types'
-import products from '../../data/products.json'
+import { getProduct } from '@composable/voucherify'
 
-export const getProductBy: CommerceService['getProductBy'] = async ({
-  slug,
-}) => {
-  return products.find((el) => el.slug === slug) ?? null
+export const getProductBy: CommerceService['getProductBy'] = async ({ id }) => {
+  const product = await getProduct(id)
+  return product
 }

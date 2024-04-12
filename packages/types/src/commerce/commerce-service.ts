@@ -115,6 +115,34 @@ type Redeemable = {
     loyalty_card?: unknown
   }
 }
+
+export type ProductListResponse = {
+  id: string
+  source_id?: string
+  object: 'product'
+  name?: string
+  price?: number
+  attributes?: string[]
+  created_at: string
+  image_url?: string | null
+  metadata?: Record<string, any>
+  skus?: {
+    object: 'list'
+    total: number
+    data?: {
+      id: string
+      source_id?: string
+      sku?: string
+      price?: number
+      attributes?: Record<string, string>
+      metadata?: Record<string, any>
+      updated_at?: string
+      currency?: string
+      created_at: string
+      object: 'sku'
+    }[]
+  }
+}
 export interface CommerceService {
   /**
    * Cart methods
@@ -122,7 +150,7 @@ export interface CommerceService {
 
   addCartItem(params: {
     cartId: string
-    productId: string
+    product: ProductListResponse
     variantId?: string
     quantity: number
     user?: UserSession
@@ -182,7 +210,7 @@ export interface CommerceService {
     siteUrl: string
   }): Promise<SitemapField[] | null>
 
-  getProductBy(params: { slug: string }): Promise<Product | null>
+  getProductBy(params: { id: string }): Promise<ProductListResponse | null>
 
   getProductSitemap: (params: {
     siteUrl: string
@@ -239,4 +267,6 @@ export interface CommerceService {
     cartId: string
     localisation?: string
   }): Promise<Redeemable[]>
+
+  getProductsList(): Promise<ProductListResponse[]>
 }

@@ -2,3 +2,5 @@ public/sitemap*
 public/robots.txt
 
 .env*.local
+.env.development
+.env.production

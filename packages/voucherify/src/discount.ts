@@ -163,7 +163,7 @@ export const getLoyaltyCardsList = async () => {
   try {
     const voucherify = getVoucherify()
     const membersResponse = await voucherify.loyalties.listMembers(
-      'camp_d7nX6wuJJ60BbS0YaAAHa2zy',
+      'camp_uNiE8OM847iYYQcRizXGmFss',
       { limit: 100 }
     )
     return (

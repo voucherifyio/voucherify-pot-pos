@@ -1,3 +1,32 @@
+# Voucherify POS
+[Voucherify POS](https://voucherify-pot-pos-9defbe226ae2.herokuapp.com/) is a "point of sales" store that is integrated with the Voucherify platform, enabling the management of loyalty campaigns by purchasing products or scanning loyalty cards.
+
+## Functionalities
+### Simplified user registration
+The store enables simplified user registration, which involves creating a customer by telephone number. This action allows you to collect loyalty points on a specific user's card, which can then be used in the [Voucherify app](https://voucherify-pot-mobile-35601287c1ae.herokuapp.com/) after full registration. A user who has completed full registration is recognized by the `registered_customer` metadata, which is included in the customer metadata.
+
+### Loyalty card management
+The application presents a list of loyalty cards of all users, which allows you to scan and add points to a specific loyalty card.
+
+### Selecting a location
+The store allows you to choose one of several available locations. Currently, locations are hardcoded in the application.
+
+### Product management
+Products are downloaded directly from your Voucherify account, which means the product list is dynamic and includes different categories. It is also possible to add new products, which will automatically be synchronized with your Voucherify account. Products are based on the "category" metadata, and products without a category are filtered out.
+
+> [!IMPORTANT]
+> **Product photos should contain the URL of the Voucherify domain `voucherify-uploads.s3.amazonaws.com`, otherwise the photos will not be displayed correctly or an error may occur due to an unverified domain.**
+
+### Generating a receipt
+After purchasing selected products, the store generates a receipt that contains information about the purchased products, location with address, price and payment status. 
+
+## External tools
+### Segment
+[Segment](https://www.voucherify.io/integrations/segment) is a tool that we integrate with our application to effectively manage user data and the purchasing process. Thanks to the Segment, we can send data from the Voucherify and POS applications to one central place, where they are processed and further transferred to the Voucherify platform. One of many events is user verification.
+
+---
+
+# POS - technical information (configuration, resources, installation)
 
 ![Composable UI Logo](./docs/static/img/logo-dark.svg#gh-dark-mode-only)
 ![Composable UI Logo](./docs/static/img/logo.svg#gh-light-mode-only)
@@ -26,9 +55,9 @@ Start building your dream commerce site today with Composable UI!
   - [Option 1: Run in Localhost](#option-1-run-in-localhost)
   - [Option 2: 1-Click Deployments](#option-2-1-click-deployments)
   - [Option 3: Run in Docker](#option-3-run-in-docker)
-- [Configuring Algolia and Stripe](#configuring-algolia-and-stripe)
+- [Voucherify POS ENV](#voucherify-pos-envs)
+- [Configuring Algolia](#configuring-algolia)
   - [Algolia Setup](#algolia-setup)
-  - [Stripe Setup](#stripe-setup)
 - [Documentation Installation](#documentation-installation)
   - [Documentation Deployment](#documentation-deployment)
 - [What's inside?](#whats-inside)
@@ -110,7 +139,26 @@ You should now have the Composable UI application running through Docker. Go to 
 
 ---
 
-## Configuring Algolia and Stripe
+## Voucherify POS ENVs
+```
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=sdfgsdfgouyh4vb5o69azs9fdvnslfd123
+
+ALGOLIA
+NEXT_PUBLIC_ALGOLIA_APP_ID=
+NEXT_PUBLIC_ALGOLIA_API_SEARCH_KEY=
+NEXT_PUBLIC_ALGOLIA_INDEX_NAME=
+
+SEGMENT
+SEGMENTIO_SOURCE_WRITE_KEY=
+
+VOUCHERIFY
+VOUCHERIFY_API_URL=
+VOUCHERIFY_APPLICATION_ID=
+VOUCHERIFY_SECRET_KEY=
+```
+
+## Configuring Algolia
 
 In order to take full advantage of Composable UI, you must configure Algolia and Stripe. If you do not, the Product Listing Page (PLP) and Checkout pages will not function correctly.
 
@@ -119,12 +167,6 @@ In order to take full advantage of Composable UI, you must configure Algolia and
 You can use Algolia's free tier to get started.
 
 [Follow the instructions](https://docs.composable.com/docs/integrations/search/algolia) in the documentation to configure Algolia.
-
-### Stripe Setup
-
-You can create a free Stripe account to get started.
-
-[Follow the instructions](https://docs.composable.com/docs/integrations/payments/stripe) in the documentation to configure Stripe.
 
 <!--
 ## Storybook Installation

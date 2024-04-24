@@ -43,7 +43,7 @@ module.exports = () => {
       domains: [
         'loremflickr.com',
         'voucherify-uploads.s3.amazonaws.com',
-        'voucherify.io',
+        'dl.voucherify.io',
         'dev.dl.voucherify.io',
         'www.drinksupermarket.com',
         'www.nestlepurezavital.com.ar',

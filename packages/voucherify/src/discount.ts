@@ -313,7 +313,7 @@ export const returnProductsFromOrder = async (
 
   const vouchersResponse = await voucherify.vouchers.list({
     customer: customer.id,
-    campaign: 'Journie PoT Loyalty Program',
+    campaign: 'Loyalty Program',
   })
   console.log('[returnProductsFromOrder] customer vouchers', vouchersResponse)
 

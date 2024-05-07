@@ -319,7 +319,7 @@ export const returnProductsFromOrder = async (
 
   if (vouchersResponse.vouchers.length !== 1) {
     throw new Error(
-      '[returnProductsFromOrder] Customer should have one "Journie PoT Loyalty Program" card'
+      '[returnProductsFromOrder] Customer should have one "Loyalty Program" card'
     )
   }
 

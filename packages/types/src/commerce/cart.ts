@@ -37,7 +37,7 @@ export interface CartItem {
   image_url: string | null
   name: string | null
   price: number
-  tax: number
+  tax: number | string
   quantity: number
   slug: string
 }

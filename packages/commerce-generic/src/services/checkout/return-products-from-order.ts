@@ -6,10 +6,11 @@ import { returnProductsFromOrder as returnProductsFromOrderService } from '@comp
 
 //@ts-ignore
 export const returnProductsFromOrder: CommerceService['returnProductsFromOrder'] =
-  async ({ voucherifyOrderId, productsIds }) => {
+  async ({ voucherifyOrderId, productsIds, campaignName }) => {
     const order = await returnProductsFromOrderService(
       voucherifyOrderId,
-      productsIds
+      productsIds,
+      campaignName
     )
     return order
   }

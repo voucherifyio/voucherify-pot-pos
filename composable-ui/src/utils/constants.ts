@@ -1,5 +1,6 @@
 export const LOCAL_STORAGE_CART_ID = 'cart_id'
 export const LOCAL_STORAGE_CART_UPDATED_AT = 'cart_updated_at'
+export const LOCAL_STORAGE_LOYALTY_PROGRAM = 'loyalty_program'
 
 export const APP_CONFIG = {
   NAME: 'Voucherify POS - PoT',

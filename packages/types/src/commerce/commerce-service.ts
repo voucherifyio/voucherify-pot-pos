@@ -239,6 +239,7 @@ export interface CommerceService {
   returnProductsFromOrder(params: {
     voucherifyOrderId: string
     productsIds: string[]
+    campaignName: string
   }): Promise<VoucherifyOrder | null>
 
   getShippingMethods(): Promise<ShippingMethod[] | null>
@@ -256,7 +257,7 @@ export interface CommerceService {
 
   resetPassword(params: { email: string }): Promise<void>
 
-  getLoyaltyCardsList(): Promise<LoyaltyCard[]>
+  getLoyaltyCardsList(params: { campaignId: string }): Promise<LoyaltyCard[]>
 
   getOrdersList(params: {
     user?: UserSession

@@ -22,11 +22,16 @@ import {
 
 import { VoucherifyOrder } from '@composable/types'
 import { Price } from 'components/price'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { LoyaltyProgramContext } from './loyalty-pogram-context'
 
 export interface LoyaltyCardsListProps {
   order: VoucherifyOrder | null | undefined
-  onReturnProducts?: (voucherifyOrderId: string, productsIds: string[]) => any
+  onReturnProducts?: (
+    voucherifyOrderId: string,
+    productsIds: string[],
+    campaignName: string
+  ) => any
 }
 
 export const OrderItemList = ({
@@ -34,6 +39,7 @@ export const OrderItemList = ({
   onReturnProducts,
 }: LoyaltyCardsListProps) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([])
+  const { loyaltyProgram } = useContext(LoyaltyProgramContext)
 
   useEffect(() => {
     setSelectedItems([])
@@ -43,7 +49,7 @@ export const OrderItemList = ({
     if (!order?.id) {
       return
     }
-    onReturnProducts?.(order.id, selectedItems)
+    onReturnProducts?.(order.id, selectedItems, loyaltyProgram.name)
   }
   if (!order) {
     return null

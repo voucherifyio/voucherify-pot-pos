@@ -11,13 +11,18 @@ import {
 } from '@chakra-ui/react'
 import { useLoyaltyCardsList } from 'hooks/use-loyalty-cards-list'
 import { signIn } from 'next-auth/react'
+import { CAMPAIGNS } from 'enum/campaigns'
 
 export interface LoyaltyCardsListProps {
   onClick?: (productId: string) => unknown
+  campaignId: string
 }
 
-export const LoyaltyCardsList = ({ onClick }: LoyaltyCardsListProps) => {
-  const { status, loyaltyCardsList } = useLoyaltyCardsList()
+export const LoyaltyCardsList = ({
+  onClick,
+  campaignId,
+}: LoyaltyCardsListProps) => {
+  const { status, loyaltyCardsList } = useLoyaltyCardsList(campaignId)
   if (status !== 'success') {
     return <></>
   }

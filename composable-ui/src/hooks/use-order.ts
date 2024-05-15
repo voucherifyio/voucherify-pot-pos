@@ -49,10 +49,15 @@ export const useOrder = (
    */
   const returnProductsFromOrder = useMutation(
     ['returnProductsFromOrder'],
-    async (variables: { voucherifyOrderId: string; productsIds: string[] }) => {
+    async (variables: {
+      voucherifyOrderId: string
+      productsIds: string[]
+      campaignName: string
+    }) => {
       const params = {
         voucherifyOrderId: variables.voucherifyOrderId,
         productsIds: variables.productsIds,
+        campaignName: variables.campaignName,
       }
       const response = await client.commerce.returnProductsFromOrder.mutate(
         params
@@ -69,11 +74,16 @@ export const useOrder = (
    * Cart Item Add Mutation
    */
   const returnProductsFromOrderMutation = useCallback(
-    async (params: { voucherifyOrderId: string; productsIds: string[] }) => {
+    async (params: {
+      voucherifyOrderId: string
+      productsIds: string[]
+      campaignName: string
+    }) => {
       await returnProductsFromOrder.mutate(
         {
           voucherifyOrderId: params.voucherifyOrderId,
           productsIds: params.productsIds,
+          campaignName: params.campaignName,
         },
         {
           onSuccess:

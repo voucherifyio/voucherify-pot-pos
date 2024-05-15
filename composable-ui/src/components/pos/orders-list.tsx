@@ -37,6 +37,7 @@ export const OrdersList = ({ onClick }: LoyaltyCardsListProps) => {
   if (status !== 'success') {
     return <></>
   }
+
   return (
     <SimpleGrid mt={8} minChildWidth="120px" spacing={2}>
       {ordersList?.length ? (

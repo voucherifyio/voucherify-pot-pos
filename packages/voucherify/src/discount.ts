@@ -159,13 +159,12 @@ setInterval(() => {
   CUSTOMERS_PHONES_CACHE.clear()
 }, 5 * 60 * 1000)
 
-export const getLoyaltyCardsList = async () => {
+export const getLoyaltyCardsList = async (campaignId: string) => {
   try {
     const voucherify = getVoucherify()
-    const membersResponse = await voucherify.loyalties.listMembers(
-      'camp_uNiE8OM847iYYQcRizXGmFss',
-      { limit: 100 }
-    )
+    const membersResponse = await voucherify.loyalties.listMembers(campaignId, {
+      limit: 100,
+    })
     return (
       (
         await Promise.all(
@@ -282,7 +281,8 @@ export type VoucherifyOrder = OrderCalculated & {
 
 export const returnProductsFromOrder = async (
   voucherifyOrderId: string,
-  productsIds: string[]
+  productsIds: string[],
+  campaignName: string
 ) => {
   if (!productsIds.length) {
     throw new Error(
@@ -313,7 +313,7 @@ export const returnProductsFromOrder = async (
 
   const vouchersResponse = await voucherify.vouchers.list({
     customer: customer.id,
-    campaign: 'Loyalty Program',
+    campaign: campaignName,
   })
   console.log('[returnProductsFromOrder] customer vouchers', vouchersResponse)
 
@@ -339,6 +339,7 @@ export const returnProductsFromOrder = async (
       null,
       { limit: 100, page }
     )
+
     transactions.push(...transactionsPage.data)
     // it looks like Voucherify opagination is broken, page param is ignored.
     //  hasMore = transactionsPage.has_more;
@@ -484,7 +485,6 @@ export const getCustomerRedeemables = async (props: {
     cartToVoucherifyOrder(cart),
     localisation
   )
-  console.log(order, 'ORDER???')
   try {
     const voucherify = getVoucherify()
     const qualificationResponse =

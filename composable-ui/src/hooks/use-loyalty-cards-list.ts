@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react'
 
 const USE_LOYALTY_CARDS_LIST_KEY = 'useLoyaltyCardsListKey'
 
-export const useLoyaltyCardsList = () => {
+export const useLoyaltyCardsList = (campaignId: string) => {
   const session = useSession()
   const queryClient = useQueryClient()
   const { client } = api.useContext()
@@ -18,7 +18,9 @@ export const useLoyaltyCardsList = () => {
   const { data: loyaltyCardsList, status } = useQuery(
     [USE_LOYALTY_CARDS_LIST_KEY, session],
     async () => {
-      const response = await client.commerce.getLoyaltyCardsList.query()
+      const response = await client.commerce.getLoyaltyCardsList.query({
+        campaignId,
+      })
       return response
     },
     {

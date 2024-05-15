@@ -26,11 +26,15 @@ import {
 import { Customer } from './pos/customer'
 import { OrdersList } from './pos/orders-list'
 import { useOrder } from 'hooks/use-order'
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { OrderItemList } from './pos/order-item-list'
 import dayjs from 'dayjs'
+import { LoyaltyProgramContext } from './pos/loyalty-pogram-context'
+import { useRouter } from 'next/router'
+import { SelectLoyaltyProgramModal } from './select-loyalty-program'
 
 export const ReturnProductsPage = () => {
+  const { loyaltyProgram, isLoyaltyProgram } = useContext(LoyaltyProgramContext)
   const [orderId, setOrderId] = useState<string | null>()
   const {
     order,
@@ -41,10 +45,20 @@ export const ReturnProductsPage = () => {
   })
   const onReturnProducts = (
     voucherifyOrderId: string,
-    productsIds: string[]
+    productsIds: string[],
+    campaignName: string
   ) => {
-    returnProductsFromOrderMutation({ voucherifyOrderId, productsIds })
+    returnProductsFromOrderMutation({
+      voucherifyOrderId,
+      productsIds,
+      campaignName,
+    })
   }
+
+  if (!isLoyaltyProgram) {
+    return <SelectLoyaltyProgramModal />
+  }
+
   return (
     <Container maxW="container.2xl" py={{ base: '4', md: '8' }}>
       <Grid templateColumns="repeat(2, 1fr)" gap={'md'}>

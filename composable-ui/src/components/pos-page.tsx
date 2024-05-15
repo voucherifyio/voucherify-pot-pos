@@ -22,12 +22,15 @@ import { CartSummary } from './cart'
 import { ProductsList } from './pos/products-list'
 import { Customer } from './pos/customer'
 import { CustomerRedeemable } from './pos/customer-redeemables'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { LoyaltyCardsList } from './pos/loyalty-cards-list'
 import { Order, ProductListResponse } from '@composable/types'
 import { useRouter } from 'next/router'
+import { LoyaltyProgramContext } from './pos/loyalty-pogram-context'
+import { SelectLoyaltyProgramModal } from './select-loyalty-program'
 
 export const PosPage = () => {
+  const { loyaltyProgram, isLoyaltyProgram } = useContext(LoyaltyProgramContext)
   const intl = useIntl()
   const [orderAdded, setOrderAdded] = useState<Order | undefined>()
   const toast = useToast()
@@ -52,7 +55,6 @@ export const PosPage = () => {
       if (order) {
         await deleteCart()
         await signOut({ redirect: false })
-        // setOrderAdded(undefined)
         router.push(`/order/${order.voucherifyOrderId}`)
       } else {
         setOrderAdded(order)
@@ -61,7 +63,6 @@ export const PosPage = () => {
   })
 
   const { isLoading, isEmpty, quantity } = cart
-  const title = intl.formatMessage({ id: 'cart.title' })
   const productCartSize: 'sm' | 'lg' | undefined = useBreakpointValue({
     base: 'sm',
     md: 'lg',
@@ -90,6 +91,10 @@ export const PosPage = () => {
     await deleteCart()
     await signOut({ redirect: false })
     setOrderAdded(undefined)
+  }
+
+  if (!isLoyaltyProgram) {
+    return <SelectLoyaltyProgramModal />
   }
 
   if (orderAdded) {
@@ -235,7 +240,7 @@ export const PosPage = () => {
           >
             Scan loyalty card
           </Text>
-          <LoyaltyCardsList />
+          <LoyaltyCardsList campaignId={loyaltyProgram.id} />
           <CustomerRedeemable />
         </GridItem>
       </Grid>

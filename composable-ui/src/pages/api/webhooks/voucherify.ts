@@ -36,8 +36,8 @@ const voucherifyWebhookRoute = async (
     return res.status(400).json({ message })
   }
 
-  if (req.body.data?.campaign?.name !== 'Journie PoT Loyalty Program') {
-    const message = 'Only `Journie PoT Loyalty Program` campaign supported'
+  if (req.body.data?.campaign?.name !== 'Loyalty Program') {
+    const message = 'Only `Loyalty Program` campaign supported'
     console.log(`[voucherifyWebhookRoute]`, message)
     return res.status(200).json({ message })
   }

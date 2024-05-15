@@ -7,6 +7,7 @@ export const returnProductsFromOrder = publicProcedure
     z.object({
       voucherifyOrderId: z.string(),
       productsIds: z.array(z.string()),
+      campaignName: z.string(),
     })
   )
   .mutation(async ({ input }) => {

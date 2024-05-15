@@ -3,8 +3,8 @@ import { getCart as getCartFromStorage } from '../../data/mock-storage'
 import { getLoyaltyCardsList as getLoyaltyCardsListClient } from '@composable/voucherify'
 
 export const getLoyaltyCardsList: CommerceService['getLoyaltyCardsList'] =
-  async () => {
-    const loyaltyCards = await getLoyaltyCardsListClient()
+  async ({ campaignId }) => {
+    const loyaltyCards = await getLoyaltyCardsListClient(campaignId)
 
     return loyaltyCards.map((voucher) => ({
       id: voucher.id,

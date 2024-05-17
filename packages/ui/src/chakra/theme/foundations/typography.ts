@@ -13,6 +13,8 @@ import { DM_Sans, Raleway } from '@next/font/google'
 // Comment out the raleway and dmSans initializations below when running `pnpm theme`. After running `pnpm theme` be sure to uncomment these constants
 const raleway = Raleway({
   subsets: ['latin'],
+  display: 'swap',
+  adjustFontFallback: false,
 })
 const dmSans = DM_Sans({
   subsets: ['latin'],

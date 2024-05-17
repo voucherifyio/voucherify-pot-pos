@@ -69,7 +69,7 @@ export const OrderItemList = ({
           <Tbody>
             {order.items?.map((item) => (
               <Tr key={item.product_id}>
-                <Td>{item.product_id}</Td>
+                <Td>{item.product?.name}</Td>
                 <Td isNumeric>{item.quantity}</Td>
                 <Td isNumeric>
                   <Price

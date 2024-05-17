@@ -1,80 +1,77 @@
-import { Button } from '@chakra-ui/react'
+import { Button, Flex, HStack, SimpleGrid, Text } from '@chakra-ui/react'
 import Image from 'next/image'
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-} from '@chakra-ui/react'
 import { useLoyaltyCardsList } from 'hooks/use-loyalty-cards-list'
 import { signIn } from 'next-auth/react'
-import { CAMPAIGNS } from 'enum/campaigns'
 
 export interface LoyaltyCardsListProps {
   onClick?: (productId: string) => unknown
   campaignId: string
 }
 
-export const LoyaltyCardsList = ({
-  onClick,
-  campaignId,
-}: LoyaltyCardsListProps) => {
+export const LoyaltyCardsList = ({ campaignId }: LoyaltyCardsListProps) => {
   const { status, loyaltyCardsList } = useLoyaltyCardsList(campaignId)
   if (status !== 'success') {
     return <></>
   }
+
   return (
-    <TableContainer>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Customer phone</Th>
-            <Th>Barcode</Th>
-            <Th isNumeric>Scan</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {loyaltyCardsList?.map((card) => (
-            <Tr key={card.code}>
-              <Td>{card.customerPhone}</Td>
-              <Td>
-                {' '}
-                <Image
-                  onClick={() =>
-                    signIn('only-loyalty-card', {
-                      redirect: true,
-                      code: card.code,
-                    })
-                  }
-                  style={{ cursor: 'pointer' }}
-                  //@ts-ignore
-                  src={card.barcodeUrl}
-                  width={200}
-                  height={25}
-                  alt="asd"
-                />
-              </Td>
-              <Td isNumeric>
-                <Button
-                  variant={'ghost'}
-                  size={'sm'}
-                  onClick={() =>
-                    signIn('only-loyalty-card', {
-                      redirect: true,
-                      code: card.code,
-                    })
-                  }
-                >
-                  Scan
-                </Button>
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </TableContainer>
+    <Flex direction={'column'} flex={1}>
+      <HStack mt={4} mb={4}>
+        <Text
+          textStyle={{ base: 'Mobile/L', md: 'Desktop/L' }}
+          color={'shading.700'}
+        >
+          Scan loyalty card{' '}
+        </Text>
+      </HStack>
+      <SimpleGrid columns={3} spacing={4}>
+        {loyaltyCardsList?.map((card) => (
+          <Flex
+            direction={'column'}
+            key={card.code}
+            padding={'10px'}
+            backgroundColor={'#f4f4f4'}
+            gap={'10px'}
+            borderRadius={'4px'}
+          >
+            <Flex direction={'column'}>
+              <Text fontSize={'14px'} fontWeight={'800'}>
+                Customer phone
+              </Text>
+              <Text fontSize={'14px'}>{card.customerPhone}</Text>
+            </Flex>
+            <Flex justify={'space-between'} align={'flex-end'}>
+              <Image
+                onClick={() =>
+                  signIn('only-loyalty-card', {
+                    redirect: true,
+                    code: card.code,
+                  })
+                }
+                style={{ cursor: 'pointer' }}
+                //@ts-ignore
+                src={card.barcodeUrl}
+                width={150}
+                height={25}
+                alt="asd"
+              />
+              <Button
+                variant={'ghost'}
+                size={'sm'}
+                borderRadius={'2px'}
+                onClick={() =>
+                  signIn('only-loyalty-card', {
+                    redirect: true,
+                    code: card.code,
+                  })
+                }
+              >
+                Scan
+              </Button>
+            </Flex>
+          </Flex>
+        ))}
+      </SimpleGrid>
+    </Flex>
   )
 }

@@ -12,7 +12,7 @@ import {
 } from '@chakra-ui/react'
 import { useGetProductList } from 'hooks/use-get-products'
 import { ProductListResponse } from '@composable/types'
-import { ChangeEvent, ChangeEventHandler, useEffect, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 
 export interface ProductsProps {
   onClick?: (product: ProductListResponse) => unknown

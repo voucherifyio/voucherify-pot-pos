@@ -6,7 +6,6 @@ import {
   Order,
   User,
   UserSession,
-  Product,
   SitemapField,
   LoyaltyCard,
 } from './index'
@@ -106,11 +105,12 @@ type VoucherifyCustomer = {
   metadata?: Record<string, any>
 }
 
-type Redeemable = {
+export type Redeemable = {
   id: string
   object: 'campaign' | 'voucher' | 'promotion_tier' | 'promotion_stack'
   campaign_name?: string
   barcodeUrl: string | boolean | undefined
+  created_at: string
   result?: {
     loyalty_card?: unknown
   }
@@ -198,6 +198,13 @@ export interface CommerceService {
     localisation?: string
   }): Promise<Cart>
 
+  getProductsList(): Promise<ProductListResponse[]>
+
+  enableCampaign(params: {
+    enabledCampaign: string
+    disabledCampaign: string
+  }): Promise<boolean>
+
   /**
    * Catalog methods
    */
@@ -267,7 +274,20 @@ export interface CommerceService {
     user?: UserSession
     cartId: string
     localisation?: string
-  }): Promise<Redeemable[]>
+  }): Promise<{
+    redeemables: Redeemable[]
+    hasMore: boolean
+    moreStartingAfter: string
+  }>
 
-  getProductsList(): Promise<ProductListResponse[]>
+  updateCustomerRedeemables(params: {
+    user?: UserSession
+    cartId: string
+    localisation?: string
+    startingAfter: string
+  }): Promise<{
+    redeemables: Redeemable[]
+    hasMore: boolean
+    moreStartingAfter: string
+  }>
 }

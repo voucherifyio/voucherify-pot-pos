@@ -18,7 +18,7 @@ export const generateCartItem = (
   image_url: product.image_url || null,
   name: product.name || null,
   price: product.price ? product.price / 100 : 0,
-  tax: product.price ? product.price * 0.07 : 0,
+  tax: product.price ? product.price * 0.0007 : 0,
   quantity: quantity ?? 1,
   slug:
     product.name

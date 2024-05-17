@@ -1,5 +1,4 @@
 import { CommerceService } from '@composable/types'
-import { getCart as getCartFromStorage } from '../../data/mock-storage'
 import {
   getOrdersList as getOrdersListClient,
   getCustomer,

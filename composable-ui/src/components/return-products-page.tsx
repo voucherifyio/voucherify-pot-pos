@@ -1,48 +1,48 @@
-import { FormatNumberOptions, useIntl } from 'react-intl'
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Box,
-  Button,
   Container,
-  Flex,
   Grid,
   GridItem,
   Text,
-  useBreakpointValue,
   Table,
-  Thead,
   Tbody,
-  Tfoot,
   Tr,
-  Th,
   Td,
-  TableCaption,
   TableContainer,
 } from '@chakra-ui/react'
 
 import { Customer } from './pos/customer'
 import { OrdersList } from './pos/orders-list'
 import { useOrder } from 'hooks/use-order'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { OrderItemList } from './pos/order-item-list'
 import dayjs from 'dayjs'
 import { LoyaltyProgramContext } from './pos/loyalty-pogram-context'
-import { useRouter } from 'next/router'
 import { SelectLoyaltyProgramModal } from './select-loyalty-program'
+import { useIntl } from 'react-intl'
+import { useToast } from 'hooks'
 
 export const ReturnProductsPage = () => {
-  const { loyaltyProgram, isLoyaltyProgram } = useContext(LoyaltyProgramContext)
+  const { isLoyaltyProgram } = useContext(LoyaltyProgramContext)
   const [orderId, setOrderId] = useState<string | null>()
+  const intl = useIntl()
+  const toast = useToast()
   const {
     order,
     status: orderFetchStatus,
     returnProductsFromOrderMutation,
   } = useOrder(orderId, {
     onReturnProductsFromOrderMutationSuccess: () => window.location.reload(),
+    onReturnProductsFromOrderMutationError: (error) => {
+      toast({
+        status: 'error',
+        description: intl.formatMessage({
+          id: `${error.message}`,
+        }),
+      })
+    },
   })
+  const [error, setError] = useState<string | undefined>(undefined)
+
   const onReturnProducts = (
     voucherifyOrderId: string,
     productsIds: string[],

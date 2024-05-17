@@ -1,10 +1,7 @@
 import {
-  Box,
   Button,
   HStack,
   Text,
-  ListItem,
-  UnorderedList,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -13,29 +10,27 @@ import {
   ModalBody,
   ModalCloseButton,
   useDisclosure,
-  Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  TableContainer,
+  Flex,
+  SimpleGrid,
 } from '@chakra-ui/react'
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { useCart, useCustomerRedeemables } from 'hooks'
 import Image from 'next/image'
-import { PosBuyerSetdForm } from '../forms/pos-buyer-set'
-import { CloseIcon } from '@chakra-ui/icons'
-import { useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useLocalisation } from 'hooks/use-localisation'
+import { Redeemable } from '@composable/types'
+
+const filteredRedeemables = (redeemables: Redeemable[]) =>
+  redeemables.filter(
+    (redeemable) =>
+      redeemable.object === 'voucher' && !redeemable.result?.loyalty_card
+  )
 
 export const CustomerRedeemable = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [addVoaddVoucherError, setAddsVoucherError] = useState<
     boolean | string
   >(false)
-
   const session = useSession()
   const { cart, addCartVoucher } = useCart({
     onCartVoucherAddSuccess(data, variables, context) {
@@ -47,23 +42,41 @@ export const CustomerRedeemable = () => {
       onOpen()
     },
   })
+  const { localisation } = useLocalisation()
 
   const loggedAsUser = !!session.data?.loggedIn
-  const { status, customerRedeemables } = useCustomerRedeemables()
+  const { status, customerRedeemables, updateCustomerRedeemablesMutation } =
+    useCustomerRedeemables({
+      onUpdateCustomerRedeemablesSuccess: (customerRedeemables) =>
+        setVouchers(customerRedeemables),
+    })
+
+  const [vouchers, setVouchers] = useState<
+    | {
+        redeemables: Redeemable[]
+        hasMore: boolean
+        moreStartingAfter: string
+      }
+    | undefined
+  >(undefined)
+  const [page, setPage] = useState(1)
+
+  const filteredVouchers = filteredRedeemables(vouchers?.redeemables || [])
+
+  useEffect(() => {
+    if (customerRedeemables?.redeemables?.length) {
+      setVouchers(customerRedeemables)
+    }
+  }, [customerRedeemables])
 
   if (
     !loggedAsUser ||
     status !== 'success' ||
-    !customerRedeemables ||
+    !customerRedeemables?.redeemables ||
     !cart.id
   ) {
     return null
   }
-
-  const vouchers = customerRedeemables.filter(
-    (redeemable) =>
-      redeemable.object === 'voucher' && !redeemable?.result?.loyalty_card
-  )
 
   const addVoucherToCart = async (voucherId: string) => {
     const r = await addCartVoucher.mutate({
@@ -72,9 +85,21 @@ export const CustomerRedeemable = () => {
     })
   }
 
+  const handleVouchersPagination = async (
+    cartId: string,
+    localisation: string,
+    startingAfter: string
+  ) => {
+    await updateCustomerRedeemablesMutation({
+      cartId,
+      localisation,
+      startingAfter,
+    })
+  }
+
   return (
-    <>
-      <HStack mt={12}>
+    <Flex direction={'column'} flex={1}>
+      <HStack mt={4} mb={4}>
         <Text
           textStyle={{ base: 'Mobile/L', md: 'Desktop/L' }}
           color={'shading.700'}
@@ -82,73 +107,104 @@ export const CustomerRedeemable = () => {
           Customers coupons and promotions ({session.data?.user?.phoneNumber})
         </Text>
       </HStack>
-      <TableContainer mt={6} mb={6}>
-        <Table variant="simple" size={'sm'}>
-          <Thead>
-            <Tr>
-              <Th>Campaign</Th>
-              <Th>Code</Th>
-              <Th>Barcode</Th>
-              <Th isNumeric>Scan</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {vouchers?.map((voucher) => (
-              <Tr key={voucher.id}>
-                <Td>{voucher.campaign_name || '- - - '}</Td>
-                <Td> {voucher.id}</Td>
-                <Td>
-                  {typeof voucher.barcodeUrl === 'string' && (
-                    // eslint-disable-next-line jsx-a11y/alt-text
-                    <Image
-                      style={{ cursor: 'pointer' }}
-                      onClick={() => addVoucherToCart(voucher.id)}
-                      src={voucher.barcodeUrl}
-                      width={200}
-                      height={25}
-                      alt="asd"
-                    />
-                  )}
-                </Td>
-
-                <Td isNumeric>
-                  <Button
-                    size={'sm'}
-                    variant={'ghost'}
+      {filteredVouchers.length ? (
+        <SimpleGrid columns={2} spacing={4}>
+          {filteredVouchers?.map((voucher) => (
+            <Flex
+              direction={'column'}
+              key={voucher.id}
+              padding={'10px'}
+              backgroundColor={'#f4f4f4'}
+              gap={'10px'}
+              borderRadius={'4px'}
+            >
+              <Flex direction={'column'}>
+                <Text fontSize={'14px'} fontWeight={'800'}>
+                  Campaign
+                </Text>
+                <Text fontSize={'14px'}>{voucher.campaign_name}</Text>
+              </Flex>
+              <Flex gap={'15px'}>
+                <Text fontSize={'14px'} fontWeight={'800'}>
+                  Code
+                </Text>
+                <Text fontSize={'14px'}>{voucher.id}</Text>
+              </Flex>
+              <Flex justify={'space-between'} align={'flex-end'}>
+                {typeof voucher.barcodeUrl === 'string' && (
+                  // eslint-disable-next-line jsx-a11y/alt-text
+                  <Image
+                    style={{ cursor: 'pointer' }}
                     onClick={() => addVoucherToCart(voucher.id)}
-                  >
-                    Scan
-                  </Button>
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
-      {/* <pre>{JSON.stringify(vouchers, null, 2)}</pre> */}
+                    src={voucher.barcodeUrl}
+                    width={150}
+                    height={25}
+                    alt="asd"
+                  />
+                )}
+                <Button
+                  size={'sm'}
+                  variant={'ghost'}
+                  borderRadius={'2px'}
+                  onClick={() => addVoucherToCart(voucher.id)}
+                >
+                  Scan
+                </Button>
+              </Flex>
+            </Flex>
+          ))}
+        </SimpleGrid>
+      ) : (
+        <Flex>
+          <Text>No active coupons or promotions</Text>
+        </Flex>
+      )}
+      <Flex justify={'center'} mt={4} gap={'15px'}>
+        {page > 1 && (
+          <Button
+            onClick={() => {
+              handleVouchersPagination(cart.id || '', localisation, '')
+              setPage(1)
+            }}
+          >
+            First page
+          </Button>
+        )}
+        {vouchers?.hasMore && (
+          <Button
+            onClick={() => {
+              handleVouchersPagination(
+                cart?.id || '',
+                localisation,
+                vouchers?.moreStartingAfter || ''
+              )
+              setPage(page + 1)
+            }}
+          >
+            Next
+          </Button>
+        )}
+      </Flex>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader></ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {addVoaddVoucherError === false
+              ? 'Voucher added 👏'
+              : addVoaddVoucherError === true
+              ? 'Could not add voucher to cart ❌'
+              : addVoaddVoucherError}
+          </ModalBody>
 
-      <>
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader></ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              {addVoaddVoucherError === false
-                ? 'Voucher added 👏'
-                : addVoaddVoucherError === true
-                ? 'Could not add voucher to cart ❌'
-                : addVoaddVoucherError}
-            </ModalBody>
-
-            <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={onClose}>
-                Close
-              </Button>
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </>
-    </>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </Flex>
   )
 }

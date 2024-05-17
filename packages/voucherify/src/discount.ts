@@ -285,8 +285,11 @@ export const returnProductsFromOrder = async (
   campaignName: string
 ) => {
   if (!productsIds.length) {
+    console.log(
+      '[returnProductsFromOrder] We expect at least one defined product to remove from the order'
+    )
     throw new Error(
-      '[returnProductsFromOrder] We expect aty least one defined product to remove from the order'
+      'We expect at least one defined product to remove from the order'
     )
   }
 
@@ -295,20 +298,21 @@ export const returnProductsFromOrder = async (
   console.log('[returnProductsFromOrder] old order', oldOrder)
 
   if (!oldOrder.items?.length) {
-    throw new Error(
-      '[returnProductsFromOrder] We expect from order to have at least one item'
-    )
+    console.log('We expect from order to have at least one item')
+    throw new Error('We expect from order to have at least one item')
   }
 
   const customerId = oldOrder.customer?.id
   if (!customerId) {
-    throw new Error('[returnProductsFromOrder] Order customer not found')
+    console.log('[returnProductsFromOrder] Order customer not found')
+    throw new Error('Order customer not found')
   }
 
   const customer = await voucherify.customers.get(customerId)
   console.log('[returnProductsFromOrder] customer', customer)
   if (customer.object !== 'customer') {
-    throw new Error('[returnProductsFromOrder] Customer is unconfirmed')
+    console.log('[returnProductsFromOrder] Customer is unconfirmed')
+    throw new Error('Customer is unconfirmed')
   }
 
   const vouchersResponse = await voucherify.vouchers.list({
@@ -318,9 +322,10 @@ export const returnProductsFromOrder = async (
   console.log('[returnProductsFromOrder] customer vouchers', vouchersResponse)
 
   if (vouchersResponse.vouchers.length !== 1) {
-    throw new Error(
+    console.log(
       '[returnProductsFromOrder] Customer should have one "Loyalty Program" card'
     )
+    throw new Error('Customer should have one "Loyalty Program" card')
   }
 
   const loyaltyMemberId = vouchersResponse.vouchers[0].code
@@ -356,7 +361,7 @@ export const returnProductsFromOrder = async (
       JSON.stringify(transactionsToAmmend)
     )
     throw new Error(
-      '[returnProductsFromOrder] Expected at least one transaction to ammend'
+      'Cannot return product with this loyalty program. Expected at least one transaction to ammend. Try with another loyalty program.'
     )
   }
   const pointsToDeduct = transactionsToAmmend.reduce(
@@ -479,12 +484,14 @@ export const getCustomerRedeemables = async (props: {
   cart: Cart
   customerId: string
   localisation?: string
+  startingAfter?: string
 }) => {
-  const { cart, customerId, localisation } = props
+  const { cart, customerId, localisation, startingAfter } = props
   const order = addLocalisationToOrder(
     cartToVoucherifyOrder(cart),
     localisation
   )
+
   try {
     const voucherify = getVoucherify()
     const qualificationResponse =
@@ -492,12 +499,15 @@ export const getCustomerRedeemables = async (props: {
         order,
         scenario: 'AUDIENCE_ONLY',
         customer: { source_id: customerId },
-        options: { expand: ['redeemable'], limit: 100 },
+        options: {
+          expand: ['redeemable'],
+          limit: 10,
+          starting_after: startingAfter,
+        },
       })
-    const redeemables = qualificationResponse.redeemables.data
 
-    return await Promise.all(
-      redeemables.map(async (redeemable) => {
+    const redeemables = await Promise.all(
+      qualificationResponse.redeemables.data.map(async (redeemable) => {
         if (redeemable.object !== 'voucher') {
           return { ...redeemable, barcodeUrl: false }
         }
@@ -506,6 +516,12 @@ export const getCustomerRedeemables = async (props: {
         return { ...redeemable, barcodeUrl: v.assets?.barcode?.url }
       })
     )
+
+    return {
+      redeemables,
+      hasMore: qualificationResponse.redeemables.has_more,
+      moreStartingAfter: qualificationResponse.redeemables.more_starting_after,
+    }
   } catch (e) {
     return []
   }

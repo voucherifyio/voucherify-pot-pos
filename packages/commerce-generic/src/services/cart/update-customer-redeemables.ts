@@ -1,25 +1,26 @@
 import { CommerceService } from '@composable/types'
+import { getCustomerRedeemables } from '@composable/voucherify'
 import { getCart as getCartFromStorage } from '../../data/mock-storage'
-import { getCustomerRedeemables as getCustomerRedeemablesClient } from '@composable/voucherify'
 
 //@ts-ignore
-export const getCustomerRedeemables: CommerceService['getCustomerRedeemables'] =
-  async ({ user, cartId, localisation }) => {
+export const updateCustomerRedeemables: CommerceService['updateCustomerRedeemables'] =
+  async ({ user, cartId, localisation, startingAfter }) => {
     if (!user || !user.sourceId) {
       return []
     }
     if (!cartId) {
       return []
     }
-
     const cart = await getCartFromStorage(cartId)
 
     if (!cart) {
       return []
     }
-    return await getCustomerRedeemablesClient({
+
+    return await getCustomerRedeemables({
       cart,
       customerId: user.sourceId,
       localisation,
+      startingAfter,
     })
   }

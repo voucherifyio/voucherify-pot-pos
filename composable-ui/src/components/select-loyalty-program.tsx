@@ -5,12 +5,16 @@ import { CAMPAIGNS } from 'enum/campaigns'
 import { writeStorage } from 'utils/local-storage'
 import { LOCAL_STORAGE_LOYALTY_PROGRAM } from 'utils/constants'
 import { useRouter } from 'next/router'
+import { useHandleCampaign } from 'hooks/use-handle-campaign'
 
 export const SelectLoyaltyProgramModal = () => {
   const { setLoyaltyProgram } = useContext(LoyaltyProgramContext)
   const [error, setError] = useState<string | undefined>(undefined)
   const [selectedOption, setSelectedOption] = useState({ name: '', id: '' })
   const router = useRouter()
+  const { enableCampaignMutation } = useHandleCampaign({
+    onCampaignHandledSuccess: () => router.reload(),
+  })
 
   const handleChange = (e: ChangeEvent<HTMLSelectElement>) => {
     const id = e.target.value as CAMPAIGNS
@@ -23,13 +27,24 @@ export const SelectLoyaltyProgramModal = () => {
     })
   }
 
-  const handleOnClick = (loyaltyProgram: { name: string; id: string }) => {
-    if (!selectedOption.id) {
+  const handleOnClick = async (loyaltyProgram: {
+    name: string
+    id: string
+  }) => {
+    if (!loyaltyProgram.id) {
       return setError('Select loyalty program')
     }
+    const disabled = [
+      CAMPAIGNS.LOYALTY_PROGRAM_EARN_AND_BURN_ID,
+      CAMPAIGNS.LOYALTY_PROGRAM_ID,
+    ].find((campaign) => campaign !== loyaltyProgram.id)
+
+    await enableCampaignMutation({
+      enabledCampaign: selectedOption.id,
+      disabledCampaign: String(disabled),
+    })
     setLoyaltyProgram(loyaltyProgram)
     writeStorage(LOCAL_STORAGE_LOYALTY_PROGRAM, loyaltyProgram)
-    router.reload()
   }
 
   return (

@@ -12,6 +12,7 @@ interface UseOrderOptions {
   onReturnProductsFromOrderMutationSuccess?: (
     cart: VoucherifyOrder | null
   ) => void
+  onReturnProductsFromOrderMutationError?: (error: { message: string }) => void
 }
 
 export const useOrder = (
@@ -64,9 +65,6 @@ export const useOrder = (
       )
 
       return response
-    },
-    {
-      // onError: optionsRef.current?.onCartItemAddError,
     }
   )
 
@@ -88,6 +86,13 @@ export const useOrder = (
         {
           onSuccess:
             optionsRef.current?.onReturnProductsFromOrderMutationSuccess,
+          onError: (error) => {
+            if (error instanceof Error) {
+              return optionsRef?.current?.onReturnProductsFromOrderMutationError?.(
+                error
+              )
+            }
+          },
         }
       )
     },

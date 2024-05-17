@@ -7,6 +7,8 @@ export const Localisation = () => {
     <>
       <Select
         value={localisation}
+        size={'sm'}
+        width={'300px'}
         onChange={(e) => updateLocalisation(e.target.value)}
       >
         {LOCALISATIONS.map((local) => (

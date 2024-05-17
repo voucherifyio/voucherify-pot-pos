@@ -232,18 +232,12 @@ export const PosPage = () => {
             Scan product
           </Text>
           <ProductsList onClick={handleAddToCart} />
-
-          <Text
-            mt={12}
-            textStyle={{ base: 'Mobile/L', md: 'Desktop/L' }}
-            color={'shading.700'}
-          >
-            Scan loyalty card
-          </Text>
-          <LoyaltyCardsList campaignId={loyaltyProgram.id} />
-          <CustomerRedeemable />
         </GridItem>
       </Grid>
+      <Flex gap={'30px'}>
+        <LoyaltyCardsList campaignId={loyaltyProgram.id} />
+        <CustomerRedeemable />
+      </Flex>
     </Container>
   )
 }

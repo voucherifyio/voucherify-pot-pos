@@ -5,6 +5,9 @@
 ### Simplified user registration
 The store enables simplified user registration, which involves creating a customer by telephone number. This action allows you to collect loyalty points on a specific user's card, which can then be used in the [Voucherify app](https://voucherify-pot-mobile-35601287c1ae.herokuapp.com/) after full registration. A user who has completed full registration is recognized by the `registered_customer` metadata, which is included in the customer metadata.
 
+### Selecting/enabling specific campaign
+We can select one of two available loyalty campaigns. After selecting a specific campaign, it will be enabled and disabling the other campaign.
+
 ### Loyalty card management
 The application presents a list of loyalty cards of all users, which allows you to scan and add points to a specific loyalty card.
 
@@ -12,7 +15,7 @@ The application presents a list of loyalty cards of all users, which allows you 
 The store allows you to choose one of several available locations. Currently, locations are hardcoded in the application.
 
 ### Product management
-Products are downloaded directly from your Voucherify account, which means the product list is dynamic and includes different categories. It is also possible to add new products, which will automatically be synchronized with your Voucherify account. Products are based on the "category" metadata, and products without a category are filtered out.
+Products are downloaded directly from your Voucherify account, which means the product list is dynamic and includes different categories. It is also possible to add new products, which will automatically be synchronized with your Voucherify account. Products are based on the "category" metadata, products without a category are filtered out.
 
 > [!IMPORTANT]
 > **Product photos should contain the URL of the Voucherify domain `voucherify-uploads.s3.amazonaws.com`, otherwise the photos will not be displayed correctly or an error may occur due to an unverified domain.**

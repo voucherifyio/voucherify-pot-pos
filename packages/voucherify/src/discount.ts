@@ -355,35 +355,31 @@ export const returnProductsFromOrder = async (
     .filter((t) => t.type === 'POINTS_ACCRUAL')
     .filter((t) => t.details.order?.id === oldOrder.id)
 
-  if (!transactionsToAmmend.length) {
+  if (transactionsToAmmend.length > 0) {
+    const pointsToDeduct = transactionsToAmmend.reduce(
+      (points, transactionToAmmend) => {
+        return points + transactionToAmmend.details.balance.points
+      },
+      0
+    )
+
     console.log(
-      '[returnProductsFromOrder] Expected at least one transaction to ammend',
-      JSON.stringify(transactionsToAmmend)
+      '[returnProductsFromOrder] transactionsToAmmend',
+      transactionsToAmmend
     )
-    throw new Error(
-      'Cannot return product with this loyalty program. Expected at least one transaction to ammend. Try with another loyalty program.'
-    )
+    console.log('[returnProductsFromOrder] pointsToDeduct', pointsToDeduct)
+
+    await voucherify.loyalties.addOrRemoveCardBalance(loyaltyMemberId, {
+      points: -pointsToDeduct,
+      expiration_type: 'NON_EXPIRING',
+      reason: `Return products ${productsIds.join(', ')} from order: ${
+        oldOrder.id
+      }`,
+    })
   }
-  const pointsToDeduct = transactionsToAmmend.reduce(
-    (points, transactionToAmmend) => {
-      return points + transactionToAmmend.details.balance.points
-    },
-    0
-  )
-
   console.log(
-    '[returnProductsFromOrder] transactionsToAmmend',
-    transactionsToAmmend
+    '[returnProductsFromOrder] No available transactions, update order without deduct points.'
   )
-  console.log('[returnProductsFromOrder] pointsToDeduct', pointsToDeduct)
-
-  await voucherify.loyalties.addOrRemoveCardBalance(loyaltyMemberId, {
-    points: -pointsToDeduct,
-    expiration_type: 'NON_EXPIRING',
-    reason: `Return products ${productsIds.join(', ')} from order: ${
-      oldOrder.id
-    }`,
-  })
   await voucherify.orders.update({ id: oldOrder.id, status: 'CANCELED' })
 
   const items = oldOrder.items.filter(

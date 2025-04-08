@@ -62,6 +62,8 @@ module.exports = () => {
         'media.boohoo.com',
         'pl.benetton.com',
         'eu.wrangler.com',
+        'vf-uploads-us-east-1.s3.amazonaws.com',
+        'us1.dl.voucherify.io',
       ],
       formats: ['image/avif', 'image/webp'],
       minimumCacheTTL: 60 * 60 * 24 * 30,

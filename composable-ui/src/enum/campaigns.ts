@@ -1,6 +1,6 @@
 export enum CAMPAIGNS {
-  LOYALTY_PROGRAM = 'Loyalty Program',
-  LOYALTY_PROGRAM_ID = 'camp_uNiE8OM847iYYQcRizXGmFss',
-  LOYALTY_PROGRAM_EARN_AND_BURN = 'Loyalty Program - earn and burn',
-  LOYALTY_PROGRAM_EARN_AND_BURN_ID = 'camp_ocQNAUiVVKEliBzVD97nF1yu',
+  LOYALTY_PROGRAM = 'H-E-B Continuity',
+  LOYALTY_PROGRAM_ID = 'camp_HQnS260WUa8wwyvVB5KKYuz0',
+  LOYALTY_PROGRAM_EARN_AND_BURN = 'H-E-B Loyalty',
+  LOYALTY_PROGRAM_EARN_AND_BURN_ID = 'camp_6k2YGvptdN3e9pHYCLtE5o5J',
 }

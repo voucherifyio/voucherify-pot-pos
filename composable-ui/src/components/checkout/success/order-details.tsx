@@ -119,7 +119,7 @@ export const OrderDetails = ({
 
 interface InfoSectionProps extends TextProps {
   title: string
-  content: string[]
+  content: string[] | string
 }
 
 export const InfoSection = ({

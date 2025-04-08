@@ -117,9 +117,9 @@ export const OrderDetails = ({
   )
 }
 
-interface InfoSectionProps extends TextProps {
+interface InfoSectionProps {
   title: string
-  content: string[] | string
+  content: string[]
 }
 
 export const InfoSection = ({
